@@ -40,7 +40,7 @@ public class SacCodeEntity extends CommonEntity {
 	private String sacCodeNumber;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sacCodeEntity", cascade = { CascadeType.ALL })
-	private List<BookingVsRoomEntity> bookingEntities;
+	private List<BookingVsRoomEntity> bookingVsRoomEntities;
 
 	@Override
 	public String toString() {

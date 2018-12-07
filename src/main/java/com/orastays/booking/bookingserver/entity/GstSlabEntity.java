@@ -43,7 +43,7 @@ public class GstSlabEntity extends CommonEntity {
 	private String percentage;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "gstSlabEntity", cascade = { CascadeType.ALL })
-	private List<BookingVsRoomEntity> bookingEntities;
+	private List<BookingVsRoomEntity> bookingVsRoomEntities;
 
 	@Override
 	public String toString() {
