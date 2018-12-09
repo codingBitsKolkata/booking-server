@@ -1,5 +1,7 @@
 package com.orastays.booking.bookingserver.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,19 +13,43 @@ import lombok.ToString;
 @ToString
 public class BookingVsPaymentModel extends CommonModel {
 
-	private String bookingInfoId;
+	@JsonProperty("bookingVsPaymentId")
+	private String bookingVsPaymentId;
 
-	private String name;
-	private String address;
-	private String companyName;
-	private String gstin;
-	private String mobile;
-	private String email;
-	private String checkinPrefTime;
-	private String checkoutPrefTime;
-	private String identityId;
-	private String idFileUrl;
-	private BookingModel bookingModels;
-	private GatewayModel gatewayModels;
+	@JsonProperty("amountPaid")
+	private String amountPaid;
+
+	@JsonProperty("orderId")
+	private String orderId;
+
+	@JsonProperty("orderAmount")
+	private String orderAmount;
+
+	@JsonProperty("referenceId")
+	private String referenceId;
+
+	@JsonProperty("txStatus")
+	private String txStatus;
+
+	@JsonProperty("paymentMode")
+	private String paymentMode;
+
+	@JsonProperty("txMsg")
+	private String txMsg;
+
+	@JsonProperty("txTime")
+	private String txTime;
+
+	@JsonProperty("signature")
+	private String signature;
+
+	@JsonProperty("otherInfo")
+	private String otherInfo;
+
+	@JsonProperty("bookings")
+	private BookingModel bookingModel;
+
+	@JsonProperty("gateways")
+	private GatewayModel gatewayModel;
 
 }

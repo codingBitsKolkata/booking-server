@@ -2,6 +2,8 @@ package com.orastays.booking.bookingserver.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,24 +15,54 @@ import lombok.ToString;
 @ToString
 public class BookingModel extends CommonModel {
 
-	private String bookingVsPaymentId;
+	@JsonProperty("bookingId")
+	private String bookingId;
 
-	private String amountPaid;
-	private String orderId;
-	private String orderAmount;
-	private String referenceId;
-	private String txStatus;
-	private String paymentMode;
-	private String txMsg;
-	private String txTime;
-	private String signature;
-	private String otherInfo;
+	@JsonProperty("orabookingId")
+	private String orabookingId;
 
-	private ConvenienceModel convenienceModels;
+	@JsonProperty("userId")
+	private String userId;
 
-	private List<BookingInfoModel> bookingInfoModels;
-	private List<BookingVsHomestayModel> bookingVsHomestayModels;
+	@JsonProperty("propertyId")
+	private String propertyId;
+
+	@JsonProperty("checkinDate")
+	private String checkinDate;
+
+	@JsonProperty("checkoutDate")
+	private String checkoutDate;
+
+	@JsonProperty("numOfDays")
+	private String numOfDays;
+
+	@JsonProperty("totalPaybleWithoutGST")
+	private String totalPaybleWithoutGST;
+
+	@JsonProperty("totalPaybleWithGST")
+	private String totalPaybleWithGST;
+
+	@JsonProperty("grandTotal")
+	private String grandTotal;
+
+	@JsonProperty("conveniences")
+	private ConvenienceModel convenienceModel;
+	
+	@JsonProperty("bookingInfos")
+	private BookingInfoModel bookingInfoModel;
+
+	
+	@JsonProperty("bookingVsHomestays")
+	private BookingVsHomestayModel bookingVsHomestayModel;
+	
+	@JsonProperty("bookingVsRooms")
 	private List<BookingVsRoomModel> bookingVsRoomModels;
+	
+	@JsonProperty("bookingVsPayments")
 	private List<BookingVsPaymentModel> bookingVsPaymentModels;
+	
 
 }
+
+
+

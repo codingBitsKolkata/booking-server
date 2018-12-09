@@ -1,5 +1,7 @@
 package com.orastays.booking.bookingserver.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,18 +14,40 @@ import lombok.ToString;
 public class BookingInfoModel extends CommonModel {
 
 	
+	@JsonProperty("bookingInfoId")
 	private String bookingInfoId;
 
+	@JsonProperty("name")
 	private String name;
+
+	@JsonProperty("address")
 	private String address;
+
+	@JsonProperty("companyName")
 	private String companyName;
+
+	@JsonProperty("gstin")
 	private String gstin;
+
+	@JsonProperty("mobile")
 	private String mobile;
+
+	@JsonProperty("email")
 	private String email;
+
+	@JsonProperty("checkinPrefTime")
 	private String checkinPrefTime;
+
+	@JsonProperty("checkoutPrefTime")
 	private String checkoutPrefTime;
+
+	@JsonProperty("identityId")
 	private String identityId;
+
+	@JsonProperty("idFileUrl")
 	private String idFileUrl;
-	private BookingModel bookingModels;
+
+	@JsonProperty("bookings")
+	private BookingModel bookingModel;
 
 }

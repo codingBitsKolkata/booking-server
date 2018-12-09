@@ -15,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,15 +33,19 @@ public class SacCodeEntity extends CommonEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "sac_code_id")
+	@JsonProperty("sacCodeId")
 	private Long sacCodeId;
 
 	@Column(name = "sac_name")
+	@JsonProperty("sacCodeName")
 	private String sacCodeName;
 
 	@Column(name = "sac_code_number")
+	@JsonProperty("sacCodeNumber")
 	private String sacCodeNumber;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sacCodeEntity", cascade = { CascadeType.ALL })
+	@JsonProperty("bookingVsRooms")
 	private List<BookingVsRoomEntity> bookingVsRoomEntities;
 
 	@Override

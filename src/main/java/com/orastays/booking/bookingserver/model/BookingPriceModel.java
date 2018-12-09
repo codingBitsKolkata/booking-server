@@ -1,7 +1,5 @@
 package com.orastays.booking.bookingserver.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.EqualsAndHashCode;
@@ -13,15 +11,15 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 @ToString
-public class SacCodeModel extends CommonModel {
-	
-	@JsonProperty("sacCodeId")
-	private String sacCodeId;
-	@JsonProperty("sacName")
-	private String sacName;
-	@JsonProperty("sacCodeNumber")
-	private String sacCodeNumber;
+public class BookingPriceModel extends CommonModel {
+
+	@JsonProperty("bookingPriceId")
+	private String bookingPriceId;
+
+	@JsonProperty("roomVsPriceId")
+	private String roomVsPriceId;
+
 	@JsonProperty("bookingVsRooms")
-	private List<BookingVsRoomModel> bookingVsRoomModels;
+	private BookingVsRoomModel bookingVsRoomModel;
 
 }

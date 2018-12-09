@@ -2,6 +2,8 @@ package com.orastays.booking.bookingserver.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,10 +14,13 @@ import lombok.ToString;
 @ToString
 public class GatewayModel extends CommonModel {
 
-	private String gatewayId;
+	@JsonProperty("gatewayId")
+	private Long gatewayId;
 
+	@JsonProperty("gatewayName")
 	private String gatewayName;
 
+	@JsonProperty("bookingVsPayments")
 	private List<BookingVsPaymentModel> bookingVsPaymentModels;
 
 }
