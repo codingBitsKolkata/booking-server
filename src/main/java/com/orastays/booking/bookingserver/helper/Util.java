@@ -1239,11 +1239,22 @@ public class Util {
 		Matcher m = p.matcher(value);
 		return m.find();
 	}
-
+	
+	public static Date getDateFromString(String date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date d = null;
+		try {
+			d = sdf.parse(date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return d;
+	}
 	public static void main(String[] args) {
 
 		try {
-			System.out.println(checkEmail("avirup.pal"));
+			System.out.println(getDateFromString("2019-01-01"));
 		} catch (Exception e) {
 
 		}

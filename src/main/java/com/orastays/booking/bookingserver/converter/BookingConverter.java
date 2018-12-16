@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -12,12 +13,23 @@ import com.orastays.booking.bookingserver.entity.BookingEntity;
 import com.orastays.booking.bookingserver.helper.Util;
 import com.orastays.booking.bookingserver.model.BookingModel;
 
-
 @Component
 public class BookingConverter extends CommonConverter implements BaseConverter<BookingEntity, BookingModel> {
 
 	private static final long serialVersionUID = 754163973023221139L;
 	private static final Logger logger = LogManager.getLogger(BookingConverter.class);
+
+	@Autowired
+	protected ConvenienceConverter convenienceConverter;
+
+	@Autowired
+	protected BookingInfoConverter bookingInfoConverter;
+
+	@Autowired
+	protected BookingVsRoomConverter bookingVsRoomConverter;
+
+	@Autowired
+	protected BookingVsPaymentConverter bookingVsPaymentConverter;
 
 	@Override
 	public BookingEntity modelToEntity(BookingModel m) {
@@ -34,7 +46,11 @@ public class BookingConverter extends CommonConverter implements BaseConverter<B
 
 		BookingModel bookingModel = new BookingModel();
 		bookingModel = (BookingModel) Util.transform(modelMapper, e, bookingModel);
-
+		bookingModel.setBookingVsRoomModels(bookingVsRoomConverter.entityListToModelList(e.getBookingVsRoomEntities()));
+		bookingModel.setBookingVsPaymentModels(
+				bookingVsPaymentConverter.entityListToModelList(e.getBookingVsPaymentEntities()));
+		bookingModel.setConvenienceModel(convenienceConverter.entityToModel(e.getConvenienceEntity()));
+		bookingModel.setBookingInfoModel(bookingInfoConverter.entityToModel(e.getBookingInfoEntity()));
 		if (logger.isInfoEnabled()) {
 			logger.info("entityToModel -- END");
 		}

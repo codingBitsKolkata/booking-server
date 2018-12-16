@@ -1,5 +1,6 @@
 package com.orastays.booking.bookingserver.controller;
 
+import java.util.List;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,7 +66,7 @@ public class BookingController extends BaseController {
 	}
 	
 	
-	@GetMapping(value = "/get-bookings", produces = "application/json")
+	@PostMapping(value = "/get-bookings", produces = "application/json")
 	@ApiOperation(value = "Add Booking", response = ResponseModel.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 201, message = "Please Try after Sometime!!!"),
@@ -75,8 +76,46 @@ public class BookingController extends BaseController {
 			@ApiResponse(code = 321, message = "Please give User Token"),
 			@ApiResponse(code = 322, message = "Invalid user Token")})
 	
-	public ResponseEntity<ResponseModel> getBookings() {
-		return null;
+	public ResponseEntity<ResponseModel> getBookings(@RequestBody BookingModel bookingModel) {
+		if (logger.isInfoEnabled()) {
+			logger.info("getBookings -- START");
+		}
+
+		ResponseModel responseModel = new ResponseModel();
+		Util.printLog(bookingModel, AuthConstant.INCOMING, "Get Booking", request);
+		try {
+			List<BookingModel> bookingModels = bookingService.getBookings(bookingModel);
+			responseModel.setResponseBody(bookingModels);
+			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE));
+			responseModel.setResponseMessage(messageUtil.getBundle("otp.send.success"));
+		} catch (FormExceptions fe) {
+			for (Entry<String, Exception> entry : fe.getExceptions().entrySet()) {
+				responseModel.setResponseCode(entry.getKey());
+				responseModel.setResponseMessage(entry.getValue().getMessage());
+				if (logger.isInfoEnabled()) {
+					logger.info("FormExceptions in Get Bookings -- "+Util.errorToString(fe));
+				}
+				break;
+			}
+		} catch (Exception e) {
+			if (logger.isInfoEnabled()) {
+				logger.info("Exception in Get Bookings -- "+Util.errorToString(e));
+			}
+			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_ERROR_CODE));
+			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_ERROR_MESSAGE));
+		}
+
+		Util.printLog(responseModel, AuthConstant.OUTGOING, "Get Bookings", request);
+
+		if (logger.isInfoEnabled()) {
+			logger.info("getBookings -- END");
+		}
+		
+		if (responseModel.getResponseCode().equals(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE))) {
+			return new ResponseEntity<>(responseModel, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	
@@ -114,7 +153,7 @@ public class BookingController extends BaseController {
 			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_ERROR_MESSAGE));
 		}
 
-		Util.printLog(responseModel, AuthConstant.OUTGOING, "Validate Login", request);
+		Util.printLog(responseModel, AuthConstant.OUTGOING, "Validate Booking", request);
 
 		if (logger.isInfoEnabled()) {
 			logger.info("validateBooking -- END");
