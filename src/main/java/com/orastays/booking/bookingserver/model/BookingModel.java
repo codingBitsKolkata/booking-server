@@ -2,8 +2,8 @@ package com.orastays.booking.bookingserver.model;
 
 import java.util.List;
 
-import javax.persistence.Column;
-
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.EqualsAndHashCode;
@@ -15,6 +15,7 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 @ToString
+@JsonInclude(Include.NON_NULL)
 public class BookingModel extends CommonModel {
 
 	@JsonProperty("bookingId")

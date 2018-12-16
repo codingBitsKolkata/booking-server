@@ -1,8 +1,11 @@
 package com.orastays.booking.bookingserver.helper;
 
+
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
@@ -82,6 +85,21 @@ public class Util {
 			return null;
 		}
 		
+	}
+	
+	public static boolean checkDate(String startDate) {
+
+		boolean flag = false;
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			formatter.parse(startDate);
+			flag = true;
+		} catch (Exception e) {
+
+			return false;
+		}
+
+		return flag;
 	}
 	
 	public static boolean checkDate(String startDate, String endDate) {
@@ -346,7 +364,6 @@ public class Util {
 
 		final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 		final DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-		@SuppressWarnings("unused")
 		final DateTimeFormatter dateFormat8 = DateTimeFormatter.ofPattern(DATE_FORMAT);
 		Date currentDate = new Date();
 
@@ -1055,7 +1072,6 @@ public class Util {
 
 	}
 
-	@SuppressWarnings("deprecation")
 	public static Date getLastDate() {
 
 		try {
@@ -1199,8 +1215,8 @@ public class Util {
 	
 	public static boolean checkEmail(String emailId) {
 		
-		String emailPattern = "(^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$)";
-		Pattern pattern = Pattern.compile(emailPattern);
+		String emailPattern = "^(.+)@(.+)$";
+		Pattern pattern = Pattern.compile(emailPattern, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(emailId);
 		return matcher.matches();
 	}
@@ -1209,11 +1225,25 @@ public class Util {
 		
 		return (int)(Math.random() *  9000) + 1000;
 	}
+	
+	public static String errorToString(Exception e) {
+		
+		StringWriter errors = new StringWriter();
+		e.printStackTrace(new PrintWriter(errors));
+		return errors.toString();
+	}
+	
+	public static boolean checkSpecialCharacter(String value) {
+		
+		Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+		Matcher m = p.matcher(value);
+		return m.find();
+	}
 
 	public static void main(String[] args) {
 
 		try {
-			System.out.println(checkAlphabet("Avirup Pal123"));
+			System.out.println(checkEmail("avirup.pal"));
 		} catch (Exception e) {
 
 		}
