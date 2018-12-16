@@ -23,6 +23,9 @@ public class ConvenienceModel extends CommonModel {
 
 	@JsonProperty("amount")
 	private String amount;
+	
+	@JsonProperty("gstPercentage")
+	private String gstPercentage;
 
 	@JsonProperty("bookings")
 	private List<BookingModel> bookingModels;
