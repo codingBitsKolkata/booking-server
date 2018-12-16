@@ -39,7 +39,11 @@ public class ConvenienceEntity extends CommonEntity {
 	@Column(name = "amount")
 	@JsonProperty("amount")
 	private String amount;
-
+	
+	@Column(name = "gst_percentage")
+	@JsonProperty("gstPercentage")
+	private String gstPercentage;
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "convenienceEntity", cascade = { CascadeType.ALL })
 	@JsonProperty("bookings")
 	private List<BookingEntity> bookingEntities;
