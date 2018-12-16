@@ -2,6 +2,8 @@ package com.orastays.booking.bookingserver.model;
 
 import java.util.List;
 
+import javax.persistence.Column;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.EqualsAndHashCode;
@@ -51,9 +53,11 @@ public class BookingModel extends CommonModel {
 	@JsonProperty("bookingInfos")
 	private BookingInfoModel bookingInfoModel;
 
+	@JsonProperty("bookingApproval")
+	private String bookingApproval;
 	
-	@JsonProperty("bookingVsHomestays")
-	private BookingVsHomestayModel bookingVsHomestayModel;
+	@JsonProperty("convenienceAmtWgst")
+	private String convenienceAmtWgst;
 	
 	@JsonProperty("bookingVsRooms")
 	private List<BookingVsRoomModel> bookingVsRoomModels;

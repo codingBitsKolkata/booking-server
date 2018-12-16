@@ -62,6 +62,15 @@ public class BookingEntity extends CommonEntity {
 	@Column(name = "num_of_days")
 	@JsonProperty("numOfDays")
 	private String numOfDays;
+	
+	@Column(name = "booking_approval")
+	@JsonProperty("bookingApproval")
+	private String bookingApproval;
+	
+	@Column(name = "convenience_amt_wgst")
+	@JsonProperty("convenienceAmtWgst")
+	private String convenienceAmtWgst;
+	
 
 	@Column(name = "total_payble_without_gst")
 	@JsonProperty("totalPaybleWithoutGST")
@@ -83,11 +92,6 @@ public class BookingEntity extends CommonEntity {
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "bookingEntity", cascade = { CascadeType.ALL })
 	@JsonProperty("bookingInfos")
 	private BookingInfoEntity bookingInfoEntity;
-
-	
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "bookingEntity", cascade = { CascadeType.ALL })
-	@JsonProperty("bookingVsHomestays")
-	private BookingVsHomestayEntity bookingVsHomestayEntity;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bookingEntity", cascade = { CascadeType.ALL })
 	@JsonProperty("bookingVsRooms")
