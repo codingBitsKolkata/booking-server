@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 13, 2018 at 03:39 AM
+-- Generation Time: Dec 16, 2018 at 05:22 PM
 -- Server version: 5.7.9
 -- PHP Version: 5.6.16
 
@@ -47,7 +47,14 @@ CREATE TABLE IF NOT EXISTS `booking_info` (
   `booking_id` bigint(20) NOT NULL,
   PRIMARY KEY (`booking_info_id`),
   KEY `FKo1b17kgui5bkhpme9y5n1hnnd` (`booking_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `booking_info`
+--
+
+INSERT INTO `booking_info` (`booking_info_id`, `created_by`, `created_date`, `modified_by`, `modified_date`, `status`, `address`, `checkin_pref_time`, `checkout_pref_time`, `company_name`, `email`, `gstin`, `id_file_url`, `identity_id`, `mobile`, `name`, `booking_id`) VALUES
+(1, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 'Kolkata', '11:00:00', '09:00:00', 'CTS', 'krishanu@gmail.com', 'ASKDHDYEBHDHSNS', 'www.google.com', '1454125', '9874512547', 'Krishanu Das', 1);
 
 -- --------------------------------------------------------
 
@@ -67,27 +74,35 @@ CREATE TABLE IF NOT EXISTS `booking_price` (
   `booking_vs_room_id` bigint(20) NOT NULL,
   PRIMARY KEY (`booking_price_id`),
   KEY `FKixjogkpnvlab9fi6j0palwvtx` (`booking_vs_room_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 
 --
--- Table structure for table `booking_vs_homestay`
+-- Dumping data for table `booking_price`
 --
 
-DROP TABLE IF EXISTS `booking_vs_homestay`;
-CREATE TABLE IF NOT EXISTS `booking_vs_homestay` (
-  `booking_vs_homestay_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `created_by` bigint(20) DEFAULT NULL,
-  `created_date` varchar(255) DEFAULT NULL,
-  `modified_by` bigint(20) DEFAULT NULL,
-  `modified_date` varchar(255) DEFAULT NULL,
-  `status` int(11) DEFAULT NULL,
-  `booking_approval` bigint(20) DEFAULT NULL,
-  `booking_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`booking_vs_homestay_id`),
-  KEY `FKeofyb3h3kcjuiwpyygamijv3n` (`booking_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+INSERT INTO `booking_price` (`booking_price_id`, `created_by`, `created_date`, `modified_by`, `modified_date`, `status`, `room_vs_price_id`, `booking_vs_room_id`) VALUES
+(1, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 1, 1),
+(2, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 2, 1),
+(3, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 1, 2),
+(4, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 2, 2),
+(5, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 1, 3),
+(6, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 1, 4),
+(7, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 2, 4),
+(8, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 3, 4),
+(9, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 1, 5),
+(10, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 2, 5),
+(11, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 1, 6),
+(12, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 2, 6),
+(13, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 1, 7),
+(14, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 2, 7),
+(15, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 1, 8),
+(16, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 2, 8),
+(17, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 1, 9),
+(18, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 2, 9),
+(19, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 1, 10),
+(20, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 2, 10),
+(21, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 1, 11),
+(22, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 2, 11);
 
 -- --------------------------------------------------------
 
@@ -153,7 +168,24 @@ CREATE TABLE IF NOT EXISTS `booking_vs_room` (
   KEY `FK5ufallrpmt0lxf4fgp4u0vudm` (`booking_id`),
   KEY `FKkvrct3l7pfffk88kjk7ffx4jk` (`gst_slab_id`),
   KEY `FKdeiy7awthvtj76bw7kiescxqp` (`sac_code_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `booking_vs_room`
+--
+
+INSERT INTO `booking_vs_room` (`booking_vs_room_id`, `created_by`, `created_date`, `modified_by`, `modified_date`, `status`, `cgst`, `igst`, `num_of_adult`, `num_of_cot`, `property_pricedrop_id`, `rhd_id`, `rod_id`, `room_actual_price`, `room_gst_slab_price`, `room_id`, `rop_id`, `sgst`, `booking_id`, `gst_slab_id`, `sac_code_id`) VALUES
+(1, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '120', '', '2', '1', NULL, NULL, NULL, '1000', '1000', '1', 1, '120', 1, 1, 1),
+(2, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '120', '', '2', '0', NULL, NULL, NULL, '1000', '1000', '1', 1, '120', 2, 1, 1),
+(3, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '120', '', '3', '0', NULL, NULL, NULL, '1000', '1000', '1', 1, '120', 3, 1, 1),
+(4, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '120', '', '2', '1', NULL, NULL, NULL, '1000', '1000', '1', 1, '120', 4, 1, 1),
+(5, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '120', '', '1', '0', NULL, NULL, NULL, '1000', '1000', '1', 1, '120', 4, 1, 1),
+(6, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '120', '', '2', '1', NULL, NULL, NULL, '1000', '1000', '1', 1, '120', 5, 1, 1),
+(7, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '120', '', '3', '1', NULL, NULL, NULL, '1000', '1000', '1', 1, '120', 6, 1, 1),
+(8, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '120', '', '1', '0', NULL, NULL, NULL, '1000', '1000', '1', 1, '120', 7, 1, 1),
+(9, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '120', '', '2', '1', NULL, NULL, NULL, '1000', '1000', '1', 1, '120', 8, 1, 1),
+(10, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '120', '', '1', '0', NULL, NULL, NULL, '1000', '1000', '1', 1, '120', 9, 1, 1),
+(11, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '120', '', '1', '0', NULL, NULL, NULL, '1000', '1000', '1', 1, '120', 10, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -169,8 +201,10 @@ CREATE TABLE IF NOT EXISTS `master_booking` (
   `modified_by` bigint(20) DEFAULT NULL,
   `modified_date` varchar(255) DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
+  `booking_approval` varchar(255) DEFAULT NULL,
   `checkin_date` varchar(255) DEFAULT NULL,
   `checkout_date` varchar(255) DEFAULT NULL,
+  `convenience_amt_wgst` varchar(255) DEFAULT NULL,
   `grand_total` varchar(255) DEFAULT NULL,
   `num_of_days` varchar(255) DEFAULT NULL,
   `orabooking_id` varchar(255) DEFAULT NULL,
@@ -181,7 +215,23 @@ CREATE TABLE IF NOT EXISTS `master_booking` (
   `convenience_id` bigint(20) NOT NULL,
   PRIMARY KEY (`booking_id`),
   KEY `FKggx0d1efi7l9qvxfoxwuq72e7` (`convenience_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `master_booking`
+--
+
+INSERT INTO `master_booking` (`booking_id`, `created_by`, `created_date`, `modified_by`, `modified_date`, `status`, `booking_approval`, `checkin_date`, `checkout_date`, `convenience_amt_wgst`, `grand_total`, `num_of_days`, `orabooking_id`, `property_id`, `total_payble_with_gst`, `total_payble_without_gst`, `user_id`, `convenience_id`) VALUES
+(1, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 'Y', '2019-01-25', '2019-01-26', '236', '2476', '2', 'ORA000001', 1, '2240', '2000', 1, 1),
+(2, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 'Y', '2019-01-01', '2019-01-05', '236', '2476', '2', 'ORA000002', 1, '2240', '2000', 1, 1),
+(3, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 'Y', '2019-01-01', '2019-01-04', '236', '2476', '2', 'ORA000003', 1, '2240', '2000', 1, 1),
+(4, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 'Y', '2019-01-10', '2019-01-22', '236', '2476', '2', 'ORA000004', 1, '2240', '2000', 1, 1),
+(5, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 'Y', '2019-01-01', '2019-01-06', '236', '2476', '2', 'ORA000005', 1, '2240', '2000', 1, 1),
+(6, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 'Y', '2019-01-07', '2019-01-10', '236', '2476', '2', 'ORA000006', 1, '2240', '2000', 1, 1),
+(7, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 'Y', '2019-01-21', '2019-01-25', '236', '2476', '2', 'ORA000007', 1, '2240', '2000', 1, 1),
+(8, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 'Y', '2019-01-15', '2019-01-20', '236', '2476', '2', 'ORA000008', 1, '2240', '2000', 1, 1),
+(9, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 'Y', '2019-01-22', '2019-01-24', '236', '2476', '2', 'ORA000009', 1, '2240', '2000', 1, 1),
+(10, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 'Y', '2019-01-22', '2019-01-26', '236', '2476', '2', 'ORA000010', 1, '2240', '2000', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -198,6 +248,7 @@ CREATE TABLE IF NOT EXISTS `master_convenience` (
   `modified_date` varchar(255) DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
   `amount` varchar(255) DEFAULT NULL,
+  `gst_percentage` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`convenience_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
@@ -205,8 +256,8 @@ CREATE TABLE IF NOT EXISTS `master_convenience` (
 -- Dumping data for table `master_convenience`
 --
 
-INSERT INTO `master_convenience` (`convenience_id`, `created_by`, `created_date`, `modified_by`, `modified_date`, `status`, `amount`) VALUES
-(1, 1, '2018-08-10 23:28:42', NULL, NULL, 1, '200');
+INSERT INTO `master_convenience` (`convenience_id`, `created_by`, `created_date`, `modified_by`, `modified_date`, `status`, `amount`, `gst_percentage`) VALUES
+(1, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '200', '18');
 
 -- --------------------------------------------------------
 
@@ -231,7 +282,7 @@ CREATE TABLE IF NOT EXISTS `master_gateway` (
 --
 
 INSERT INTO `master_gateway` (`gateway_id`, `created_by`, `created_date`, `modified_by`, `modified_date`, `status`, `gateway_name`) VALUES
-(1, 1, '2018-08-10 23:28:42', NULL, NULL, 1, 'Cashfree');
+(1, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 'CASHFREE');
 
 -- --------------------------------------------------------
 
@@ -251,16 +302,17 @@ CREATE TABLE IF NOT EXISTS `master_gst_slab` (
   `percentage` varchar(255) DEFAULT NULL,
   `to_amount` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`gst_slab_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `master_gst_slab`
 --
 
 INSERT INTO `master_gst_slab` (`gst_slab_id`, `created_by`, `created_date`, `modified_by`, `modified_date`, `status`, `from_amount`, `percentage`, `to_amount`) VALUES
-(1, 1, '2018-08-10 23:28:42', NULL, NULL, 1, '0', '0', '999'),
-(2, 1, '2018-08-10 23:28:42', NULL, NULL, 1, '1000', '12', '2499'),
-(3, 1, '2018-08-10 23:28:42', NULL, NULL, 1, '1500', '18', '7499');
+(1, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '0', '0', '999'),
+(2, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '1000', '12', '2499'),
+(3, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '2500', '18', '7499'),
+(4, 1, '2018-09-06 01:27:34', NULL, NULL, 1, '7500', '28', '99999999');
 
 -- --------------------------------------------------------
 
@@ -286,7 +338,7 @@ CREATE TABLE IF NOT EXISTS `master_sac_code` (
 --
 
 INSERT INTO `master_sac_code` (`sac_code_id`, `created_by`, `created_date`, `modified_by`, `modified_date`, `status`, `sac_name`, `sac_code_number`) VALUES
-(1, 1, '2018-08-10 23:28:42', NULL, NULL, 1, 'Sample 1', '222222');
+(1, 1, '2018-09-06 01:27:34', NULL, NULL, 1, 'Service', '996311');
 
 --
 -- Constraints for dumped tables
@@ -303,12 +355,6 @@ ALTER TABLE `booking_info`
 --
 ALTER TABLE `booking_price`
   ADD CONSTRAINT `FKixjogkpnvlab9fi6j0palwvtx` FOREIGN KEY (`booking_vs_room_id`) REFERENCES `booking_vs_room` (`booking_vs_room_id`);
-
---
--- Constraints for table `booking_vs_homestay`
---
-ALTER TABLE `booking_vs_homestay`
-  ADD CONSTRAINT `FKeofyb3h3kcjuiwpyygamijv3n` FOREIGN KEY (`booking_id`) REFERENCES `master_booking` (`booking_id`);
 
 --
 -- Constraints for table `booking_vs_payment`
