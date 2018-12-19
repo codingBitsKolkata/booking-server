@@ -60,16 +60,6 @@ public class BookingModel extends CommonModel {
 	@JsonProperty("convenienceAmtWgst")
 	private String convenienceAmtWgst;
 	
-	@JsonProperty("numOfSharedBed")
-	private String numOfSharedBed;
-	
-	@JsonProperty("numOfSharedCot")
-	private String numOfSharedCot;
-	
-	@JsonProperty("room")
-	private RoomModel roomModel;
-	
-	
 	@JsonProperty("bookingVsRooms")
 	private List<BookingVsRoomModel> bookingVsRoomModels;
 	

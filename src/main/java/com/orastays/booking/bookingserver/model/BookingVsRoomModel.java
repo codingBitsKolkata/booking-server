@@ -68,4 +68,21 @@ public class BookingVsRoomModel extends CommonModel {
 
 	@JsonProperty("gstSlabs")
 	private GstSlabModel gstSlabModel;
+	
+	@JsonProperty("accommodation")
+	private AccommodationModel accommodationModel;
+	
+	@JsonProperty("numOfSharedBed")
+	private String numOfSharedBed;
+	
+	@JsonProperty("numOfSharedCot")
+	private String numOfSharedCot;
+	
+	@JsonProperty("totalNumOfSharedCot")
+	private String totalNumOfSharedCot;
+	
+	@JsonProperty("totalNumOfSharedBed")
+	private String totalNumOfSharedBed;
+	
+	
 }

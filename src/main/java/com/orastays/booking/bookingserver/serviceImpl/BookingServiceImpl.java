@@ -3,6 +3,7 @@ package com.orastays.booking.bookingserver.serviceImpl;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.transaction.Transactional;
 
@@ -13,11 +14,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.orastays.booking.bookingserver.converter.BookingConverter;
+import com.orastays.booking.bookingserver.converter.BookingVsRoomConverter;
 import com.orastays.booking.bookingserver.dao.BookingDAO;
+import com.orastays.booking.bookingserver.entity.BookingEntity;
 import com.orastays.booking.bookingserver.exceptions.FormExceptions;
 import com.orastays.booking.bookingserver.helper.Status;
 import com.orastays.booking.bookingserver.helper.Util;
 import com.orastays.booking.bookingserver.model.BookingModel;
+import com.orastays.booking.bookingserver.model.BookingVsRoomModel;
+import com.orastays.booking.bookingserver.model.PaymentModel;
 import com.orastays.booking.bookingserver.service.BookingService;
 
 @Service
@@ -32,6 +37,9 @@ public class BookingServiceImpl implements BookingService {
 	@Autowired
 	protected BookingConverter bookingConverter;
 
+	@Autowired
+	BookingVsRoomConverter bookingVsRoomConverter;
+	
 	@Value("${entitymanager.packagesToScan}")
 	protected String entitymanagerPackagesToScan;
 
@@ -91,6 +99,30 @@ public class BookingServiceImpl implements BookingService {
 		}
 
 		return bookingModels;
+	}
+
+	@Override
+	public PaymentModel addBooking(BookingModel bookingModel) throws FormExceptions {
+		if (logger.isInfoEnabled()) {
+			logger.info("addBooking -- START");
+		}
+		
+		CopyOnWriteArrayList<BookingModel> booked =  new CopyOnWriteArrayList<>();
+		List<BookingVsRoomModel> bookingVsRoomModels= bookingModel.getBookingVsRoomModels(); 
+		bookingVsRoomModels.parallelStream().forEach(room -> {
+			if(room.getAccommodationModel().getAccommodationId().equals("2")) {
+				List<BookingEntity> privateBookingEntity = bookingDAO.getBookedPivateRoom(bookingModel.getPropertyId(), room.getRoomId(), bookingModel.getCheckinDate(), bookingModel.getCheckoutDate());
+				if(privateBookingEntity.size() > 0) {
+					booked.add(bookingConverter.entityToModel(privateBookingEntity.get(0)));
+				}
+			}
+		});
+		if (logger.isInfoEnabled()) {
+			logger.info("addBooking -- END");
+		}
+
+		return null;
+
 	}
 
 }

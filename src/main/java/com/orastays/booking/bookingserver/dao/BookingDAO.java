@@ -28,4 +28,20 @@ public class BookingDAO extends GenericDAO<BookingEntity, Long> {
 		List results = query.list();
 		return results;
 	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public List<BookingEntity> getBookedPivateRoom(String propertyId, String roomId, String checkinDate, String checkoutDate) {
+		
+		String hql = "FROM BookingEntity be inner join BookingVsRoomEntity bre"
+						+ "on be.bookingId = bre.bookingEntity.bookingId"
+						+ "where (DATE('"+ checkinDate +"') <= DATE(be.checkinDate) and DATE('"+ checkoutDate +"') >= DATE(be.checkoutDate))"
+						+ "or  (DATE('"+ checkinDate +"') <= DATE(be.checkinDate) and DATE('"+ checkoutDate +"') <= DATE(be.checkoutDate))"
+						+ "or  (DATE('"+ checkinDate +"') >= DATE(be.checkinDate) and DATE('"+ checkoutDate +"') >= DATE(be.checkoutDate))"
+						+ "or  (DATE('"+ checkinDate +"') >= DATE(be.checkinDate) and DATE('"+ checkoutDate +"') <= DATE(be.checkoutDate))"
+						+ "and be.propertyId = " + propertyId + " and be.status=" + Status.ACTIVE.ordinal();
+		
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		List results = query.list();
+		return results;
+	}
 }
