@@ -83,6 +83,14 @@ public class BookingEntity extends CommonEntity {
 	@Column(name = "grand_total")
 	@JsonProperty("grandTotal")
 	private String grandTotal;
+	
+	@Column(name = "num_of_shared_bed")
+	@JsonProperty("numOfSharedBed")
+	private String numOfSharedBed;
+	
+	@Column(name = "num_of_shared_cot")
+	@JsonProperty("numOfSharedCot")
+	private String numOfSharedCot;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "convenience_id", nullable = false)
