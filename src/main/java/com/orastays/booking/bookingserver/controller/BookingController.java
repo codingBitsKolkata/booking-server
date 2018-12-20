@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +22,7 @@ import com.orastays.booking.bookingserver.helper.AuthConstant;
 import com.orastays.booking.bookingserver.helper.MessageUtil;
 import com.orastays.booking.bookingserver.helper.Util;
 import com.orastays.booking.bookingserver.model.BookingModel;
+import com.orastays.booking.bookingserver.model.PaymentModel;
 import com.orastays.booking.bookingserver.model.ResponseModel;
 import com.orastays.booking.bookingserver.service.BookingService;
 
@@ -51,7 +51,7 @@ public class BookingController extends BaseController {
 	@Autowired
 	protected BookingService bookingService;
 	
-	@GetMapping(value = "/add-booking", produces = "application/json")
+	@PostMapping(value = "/add-booking", produces = "application/json")
 	@ApiOperation(value = "Add Booking", response = ResponseModel.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 201, message = "Please Try after Sometime!!!"),
@@ -61,13 +61,51 @@ public class BookingController extends BaseController {
 			@ApiResponse(code = 321, message = "Please give User Token"),
 			@ApiResponse(code = 322, message = "Invalid user Token")})
 	
-	public ResponseEntity<ResponseModel> addBooking() {
-		return null;
+	public ResponseEntity<ResponseModel> addBooking(@RequestBody BookingModel bookingModel) {
+		if (logger.isInfoEnabled()) {
+			logger.info("addBooking -- START");
+		}
+
+		ResponseModel responseModel = new ResponseModel();
+		Util.printLog(bookingModel, AuthConstant.INCOMING, "Add Booking", request);
+		try {
+			PaymentModel paymentModel = bookingService.addBooking(bookingModel);
+			responseModel.setResponseBody(paymentModel);
+			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE));
+			responseModel.setResponseMessage(messageUtil.getBundle("otp.send.success"));
+		} catch (FormExceptions fe) {
+			for (Entry<String, Exception> entry : fe.getExceptions().entrySet()) {
+				responseModel.setResponseCode(entry.getKey());
+				responseModel.setResponseMessage(entry.getValue().getMessage());
+				if (logger.isInfoEnabled()) {
+					logger.info("FormExceptions in Add Booking -- "+Util.errorToString(fe));
+				}
+				break;
+			}
+		} catch (Exception e) {
+			if (logger.isInfoEnabled()) {
+				logger.info("Exception in Add Booking -- "+Util.errorToString(e));
+			}
+			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_ERROR_CODE));
+			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_ERROR_MESSAGE));
+		}
+
+		Util.printLog(responseModel, AuthConstant.OUTGOING, "Get Bookings", request);
+
+		if (logger.isInfoEnabled()) {
+			logger.info("addBooking -- END");
+		}
+		
+		if (responseModel.getResponseCode().equals(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE))) {
+			return new ResponseEntity<>(responseModel, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	
 	@PostMapping(value = "/get-bookings", produces = "application/json")
-	@ApiOperation(value = "Add Booking", response = ResponseModel.class)
+	@ApiOperation(value = "Get Booking", response = ResponseModel.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 201, message = "Please Try after Sometime!!!"),
 			@ApiResponse(code = 312, message = "Please provide UserID"),

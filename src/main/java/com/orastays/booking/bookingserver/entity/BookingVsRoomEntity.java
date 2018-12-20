@@ -105,6 +105,15 @@ public class BookingVsRoomEntity extends CommonEntity {
 	@JsonProperty("gstSlabs")
 	private GstSlabEntity gstSlabEntity;
 
+	@Column(name = "num_of_shared_bed")
+	@JsonProperty("numOfSharedBed")
+	private String numOfSharedBed;
+	
+	@Column(name = "num_of_shared_cot")
+	@JsonProperty("numOfSharedCot")
+	private String numOfSharedCot;
+
+	
 	@Override
 	public String toString() {
 		return Long.toString(bookingVsRoomId);

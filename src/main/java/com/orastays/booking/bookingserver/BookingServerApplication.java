@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @RestController
 @EnableAutoConfiguration
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 public class BookingServerApplication {
 
 	public static void main(String[] args) {
