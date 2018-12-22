@@ -89,6 +89,11 @@ public class BookingVsRoomEntity extends CommonEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bookingVsRoomEntity", cascade = { CascadeType.ALL })
 	@JsonProperty("bookingPrices")
 	private List<BookingPriceEntity> bookingPriceEntities;
+	
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bookingVsRoomEntity", cascade = { CascadeType.ALL })
+	@JsonProperty("BookingVsRoomOraDiscounts")
+	private List<BookingVsRoomOraDiscountEntity> bookingVsRoomOraDiscountEntities;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "booking_id", nullable = false)
@@ -105,6 +110,15 @@ public class BookingVsRoomEntity extends CommonEntity {
 	@JsonProperty("gstSlabs")
 	private GstSlabEntity gstSlabEntity;
 
+	@Column(name = "num_of_shared_bed")
+	@JsonProperty("numOfSharedBed")
+	private String numOfSharedBed;
+	
+	@Column(name = "num_of_shared_cot")
+	@JsonProperty("numOfSharedCot")
+	private String numOfSharedCot;
+
+	
 	@Override
 	public String toString() {
 		return Long.toString(bookingVsRoomId);

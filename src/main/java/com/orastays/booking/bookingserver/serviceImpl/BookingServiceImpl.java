@@ -39,7 +39,7 @@ public class BookingServiceImpl implements BookingService {
 
 	@Autowired
 	BookingVsRoomConverter bookingVsRoomConverter;
-	
+
 	@Value("${entitymanager.packagesToScan}")
 	protected String entitymanagerPackagesToScan;
 
@@ -85,7 +85,8 @@ public class BookingServiceImpl implements BookingService {
 
 		List<BookingModel> bookingModels = null;
 		try {
-			bookingModels = bookingConverter.entityListToModelList(bookingDAO.getBookingsByCheckInDate(bookingModel.getCheckinDate(), bookingModel.getPropertyId()));
+			bookingModels = bookingConverter.entityListToModelList(
+					bookingDAO.getBookingsByCheckInDate(bookingModel.getCheckinDate(), bookingModel.getPropertyId()));
 			System.err.println("here");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -106,17 +107,21 @@ public class BookingServiceImpl implements BookingService {
 		if (logger.isInfoEnabled()) {
 			logger.info("addBooking -- START");
 		}
-		
-		CopyOnWriteArrayList<BookingModel> booked =  new CopyOnWriteArrayList<>();
-		List<BookingVsRoomModel> bookingVsRoomModels= bookingModel.getBookingVsRoomModels(); 
+
+		CopyOnWriteArrayList<BookingModel> booked = new CopyOnWriteArrayList<>();
+		List<BookingVsRoomModel> bookingVsRoomModels = bookingModel.getBookingVsRoomModels();
 		bookingVsRoomModels.parallelStream().forEach(room -> {
-			if(room.getAccommodationModel().getAccommodationId().equals("2")) {
-				List<BookingEntity> privateBookingEntity = bookingDAO.getBookedPivateRoom(bookingModel.getPropertyId(), room.getRoomId(), bookingModel.getCheckinDate(), bookingModel.getCheckoutDate());
-				if(privateBookingEntity.size() > 0) {
+			if (room.getAccommodationModel().getAccommodationId().equals("2")) {
+				System.err.println("in loop");
+				List<BookingEntity> privateBookingEntity = bookingDAO.getBookedPivateRoom(bookingModel.getPropertyId(),
+						room.getRoomId(), bookingModel.getCheckinDate(), bookingModel.getCheckoutDate());
+				if (privateBookingEntity.size() > 0) {
 					booked.add(bookingConverter.entityToModel(privateBookingEntity.get(0)));
 				}
 			}
 		});
+		
+		System.err.println("Out of loop");
 		if (logger.isInfoEnabled()) {
 			logger.info("addBooking -- END");
 		}

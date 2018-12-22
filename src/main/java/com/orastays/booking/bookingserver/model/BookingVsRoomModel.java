@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.orastays.booking.bookingserver.entity.BookingVsRoomOraDiscountEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.EqualsAndHashCode;
@@ -58,7 +59,7 @@ public class BookingVsRoomModel extends CommonModel {
 	private String roomActualPrice;
 	
 	@JsonProperty("bookingPrices")
-	private List<BookingPriceModel> bookingPriceEntities;
+	private List<BookingPriceModel> bookingPriceModels;
 
 	@JsonProperty("bookings")
 	private BookingModel bookingModel;
@@ -83,6 +84,9 @@ public class BookingVsRoomModel extends CommonModel {
 	
 	@JsonProperty("totalNumOfSharedBed")
 	private String totalNumOfSharedBed;
+	
+	@JsonProperty("BookingVsRoomOraDiscounts")
+	private List<BookingVsRoomOraDiscountModel> bookingVsRoomOraDiscountModels;
 	
 	
 }

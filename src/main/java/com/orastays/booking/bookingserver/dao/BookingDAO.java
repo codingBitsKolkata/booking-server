@@ -32,13 +32,12 @@ public class BookingDAO extends GenericDAO<BookingEntity, Long> {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<BookingEntity> getBookedPivateRoom(String propertyId, String roomId, String checkinDate, String checkoutDate) {
 		
-		String hql = "FROM BookingEntity be inner join BookingVsRoomEntity bre"
-						+ "on be.bookingId = bre.bookingEntity.bookingId"
-						+ "where (DATE('"+ checkinDate +"') <= DATE(be.checkinDate) and DATE('"+ checkoutDate +"') >= DATE(be.checkoutDate))"
-						+ "or  (DATE('"+ checkinDate +"') <= DATE(be.checkinDate) and DATE('"+ checkoutDate +"') <= DATE(be.checkoutDate))"
-						+ "or  (DATE('"+ checkinDate +"') >= DATE(be.checkinDate) and DATE('"+ checkoutDate +"') >= DATE(be.checkoutDate))"
-						+ "or  (DATE('"+ checkinDate +"') >= DATE(be.checkinDate) and DATE('"+ checkoutDate +"') <= DATE(be.checkoutDate))"
-						+ "and be.propertyId = " + propertyId + " and be.status=" + Status.ACTIVE.ordinal();
+		String hql = "select bre.bookingEntity FROM BookingVsRoomEntity bre join bre.bookingEntity"
+						+ "where DATE('"+ checkinDate +"') <= DATE(bre.bookingEntity.checkinDate) and DATE('"+ checkoutDate +"') >= DATE(bre.bookingEntity.checkoutDate)"
+						+ "or  DATE('"+ checkinDate +"') <= DATE(bre.bookingEntity.checkinDate) and DATE('"+ checkoutDate +"') <= DATE(bre.bookingEntity.checkoutDate)"
+						+ "or  DATE('"+ checkinDate +"') >= DATE(bre.bookingEntity.checkinDate) and DATE('"+ checkoutDate +"') >= DATE(bre.bookingEntity.checkoutDate)"
+						+ "or  DATE('"+ checkinDate +"') >= DATE(bre.bookingEntity.checkinDate) and DATE('"+ checkoutDate +"') <= DATE(bre.bookingEntity.checkoutDate)"
+						+ "and bre.bookingEntity.propertyId = " + propertyId + " and bre.bookingEntity.status=" + Status.ACTIVE.ordinal();
 		
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		List results = query.list();
