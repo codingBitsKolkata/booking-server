@@ -12,4 +12,9 @@ public final class AuthConstant {
 	public static final String COMMON_ERROR_MESSAGE = "common.error.message";
 	public static final String FOR_ROW = "for ROW";
 	
+	
+	//Payment Mode
+	public static final String MODE_CASH = "cash";
+	public static final String MODE_CASHLESS = "cashfree";
+	public static final String MODE_PARTIAL = "partial";
 }

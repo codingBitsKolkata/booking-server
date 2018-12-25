@@ -283,6 +283,8 @@ public class BookingServiceImpl implements BookingService {
 			bookingEntity2.setGrandTotal(Util.roundTo2Places(totalPayableWithGst + convenienceAmountWithGst));
 	
 			bookingDAO.update(bookingEntity2);
+			
+			//set booking vs payment
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

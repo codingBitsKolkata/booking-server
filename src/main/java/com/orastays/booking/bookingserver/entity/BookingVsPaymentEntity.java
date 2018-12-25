@@ -75,6 +75,7 @@ public class BookingVsPaymentEntity extends CommonEntity {
 	@JsonProperty("otherInfo")
 	private String otherInfo;
 
+	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "booking_id", nullable = false)
 	@JsonProperty("bookings")
@@ -85,6 +86,11 @@ public class BookingVsPaymentEntity extends CommonEntity {
 	@JsonProperty("gateways")
 	private GatewayEntity gatewayEntity;
 
+	@Column(name = "percentage")
+	@JsonProperty("percentage")
+	private String percentage;
+
+	
 	@Override
 	public String toString() {
 		return Long.toString(bookingVsPaymentId);

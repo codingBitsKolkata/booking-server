@@ -69,7 +69,11 @@ public class BookingModel extends CommonModel {
 	@JsonProperty("bookingVsPayments")
 	private List<BookingVsPaymentModel> bookingVsPaymentModels;
 	
-
+	@JsonProperty("formOfPayment")
+	private FormOfPayment formOfPayment;
+	
+	@JsonProperty("userInfo")
+	private UserInfo userInfo;
 }
 
 
