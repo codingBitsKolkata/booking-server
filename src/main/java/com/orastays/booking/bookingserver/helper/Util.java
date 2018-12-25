@@ -15,6 +15,7 @@ import java.nio.charset.CharsetEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -1250,6 +1251,18 @@ public class Util {
 			e.printStackTrace();
 		}
 		return d;
+	}
+	
+	public static Double calculateGstPayableAmount(Double amount, Double percentage) {
+		Double calculatedAmount = amount + (amount * 0.01 * percentage);
+		return calculatedAmount;
+		
+	}
+	
+	public static String roundTo2Places(Double number) {
+		DecimalFormat df = new DecimalFormat("0.00");
+		String num = df.format(number);
+		return num;
 	}
 	public static void main(String[] args) {
 

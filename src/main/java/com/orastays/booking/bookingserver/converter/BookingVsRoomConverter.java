@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -16,13 +17,32 @@ import com.orastays.booking.bookingserver.model.BookingVsRoomModel;
 public class BookingVsRoomConverter extends CommonConverter
 		implements BaseConverter<BookingVsRoomEntity, BookingVsRoomModel> {
 
+	@Autowired
+	protected BookingVsRoomOraDiscountConverter bookingVsRoomOraDiscountConverter;
+
+	@Autowired
+	protected BookingPriceConverter bookingPriceConverter;
+
+	@Autowired
+	protected SacCodeConverter sacCodeConverter;
+	
+	
 	private static final long serialVersionUID = -6543158351432501780L;
 	private static final Logger logger = LogManager.getLogger(BookingVsRoomConverter.class);
 
 	@Override
 	public BookingVsRoomEntity modelToEntity(BookingVsRoomModel m) {
-		// TODO Auto-generated method stub
-		return null;
+		if (logger.isInfoEnabled()) {
+			logger.info("modelToEntity -- START");
+		}
+
+		BookingVsRoomEntity bookingVsRoomEntity = new BookingVsRoomEntity();
+
+		bookingVsRoomEntity = (BookingVsRoomEntity) Util.transform(modelMapper, m, bookingVsRoomEntity);
+		if (logger.isInfoEnabled()) {
+			logger.info("modelToEntity -- END");
+		}
+		return bookingVsRoomEntity;
 	}
 
 	@Override
@@ -34,7 +54,9 @@ public class BookingVsRoomConverter extends CommonConverter
 
 		BookingVsRoomModel bookingVsRoomModel = new BookingVsRoomModel();
 		bookingVsRoomModel = (BookingVsRoomModel) Util.transform(modelMapper, e, bookingVsRoomModel);
-
+		bookingVsRoomModel.setBookingVsRoomOraDiscountModels(bookingVsRoomOraDiscountConverter.entityListToModelList(e.getBookingVsRoomOraDiscountEntities()));
+		bookingVsRoomModel.setBookingPriceModels(bookingPriceConverter.entityListToModelList(e.getBookingPriceEntities()));
+		bookingVsRoomModel.setSacCodeModel(sacCodeConverter.entityToModel(e.getSacCodeEntity()));
 		if (logger.isInfoEnabled()) {
 			logger.info("entityToModel -- END");
 		}

@@ -33,8 +33,17 @@ public class BookingConverter extends CommonConverter implements BaseConverter<B
 
 	@Override
 	public BookingEntity modelToEntity(BookingModel m) {
-		// TODO Auto-generated method stub
-		return null;
+		if (logger.isInfoEnabled()) {
+			logger.info("modelToEntity -- START");
+		}
+		
+		BookingEntity bookingEntity = new BookingEntity();
+		
+		bookingEntity = (BookingEntity) Util.transform(modelMapper, m, bookingEntity);
+		if (logger.isInfoEnabled()) {
+			logger.info("modelToEntity -- END");
+		}
+		return bookingEntity;
 	}
 
 	@Override

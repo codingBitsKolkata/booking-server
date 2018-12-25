@@ -36,31 +36,26 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/api")
 @Api(value = "Booking", tags = "Booking")
 public class BookingController extends BaseController {
-	
+
 	private static final Logger logger = LogManager.getLogger(BookingController.class);
-	
+
 	@Autowired
 	protected HttpServletRequest request;
-	
+
 	@Autowired
 	protected HttpServletResponse response;
-	
+
 	@Autowired
 	protected MessageUtil messageUtil;
-	
+
 	@Autowired
 	protected BookingService bookingService;
-	
+
 	@PostMapping(value = "/add-booking", produces = "application/json")
 	@ApiOperation(value = "Add Booking", response = ResponseModel.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
-			@ApiResponse(code = 201, message = "Please Try after Sometime!!!"),
-			@ApiResponse(code = 312, message = "Please provide UserID"),
-			@ApiResponse(code = 313, message = "Invalid UserID"),
-			@ApiResponse(code = 320, message = "Session expires!!! Please Login to continue..."),
-			@ApiResponse(code = 321, message = "Please give User Token"),
-			@ApiResponse(code = 322, message = "Invalid user Token")})
-	
+			@ApiResponse(code = 201, message = "Please Try after Sometime!!!") })
+
 	public ResponseEntity<ResponseModel> addBooking(@RequestBody BookingModel bookingModel) {
 		if (logger.isInfoEnabled()) {
 			logger.info("addBooking -- START");
@@ -72,38 +67,37 @@ public class BookingController extends BaseController {
 			PaymentModel paymentModel = bookingService.addBooking(bookingModel);
 			responseModel.setResponseBody(paymentModel);
 			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE));
-			responseModel.setResponseMessage(messageUtil.getBundle("otp.send.success"));
+			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_MESSAGE));
 		} catch (FormExceptions fe) {
 			for (Entry<String, Exception> entry : fe.getExceptions().entrySet()) {
 				responseModel.setResponseCode(entry.getKey());
 				responseModel.setResponseMessage(entry.getValue().getMessage());
 				if (logger.isInfoEnabled()) {
-					logger.info("FormExceptions in Add Booking -- "+Util.errorToString(fe));
+					logger.info("FormExceptions in Add Booking -- " + Util.errorToString(fe));
 				}
 				break;
 			}
 		} catch (Exception e) {
 			if (logger.isInfoEnabled()) {
-				logger.info("Exception in Add Booking -- "+Util.errorToString(e));
+				logger.info("Exception in Add Booking -- " + Util.errorToString(e));
 			}
 			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_ERROR_CODE));
 			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_ERROR_MESSAGE));
 		}
 
-		Util.printLog(responseModel, AuthConstant.OUTGOING, "Get Bookings", request);
+		Util.printLog(responseModel, AuthConstant.OUTGOING, "Add Booking", request);
 
 		if (logger.isInfoEnabled()) {
 			logger.info("addBooking -- END");
 		}
-		
+
 		if (responseModel.getResponseCode().equals(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE))) {
 			return new ResponseEntity<>(responseModel, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	
+
 	@PostMapping(value = "/get-bookings", produces = "application/json")
 	@ApiOperation(value = "Get Booking", response = ResponseModel.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
@@ -112,43 +106,90 @@ public class BookingController extends BaseController {
 			@ApiResponse(code = 313, message = "Invalid UserID"),
 			@ApiResponse(code = 320, message = "Session expires!!! Please Login to continue..."),
 			@ApiResponse(code = 321, message = "Please give User Token"),
-			@ApiResponse(code = 322, message = "Invalid user Token")})
-	
+			@ApiResponse(code = 322, message = "Invalid user Token") })
+
 	public ResponseEntity<ResponseModel> getBookings(@RequestBody BookingModel bookingModel) {
 		if (logger.isInfoEnabled()) {
 			logger.info("getBookings -- START");
 		}
 
 		ResponseModel responseModel = new ResponseModel();
-		Util.printLog(bookingModel, AuthConstant.INCOMING, "Get Booking", request);
+		Util.printLog(bookingModel, AuthConstant.INCOMING, "get-bookings", request);
 		try {
 			List<BookingModel> bookingModels = bookingService.getBookings(bookingModel);
 			responseModel.setResponseBody(bookingModels);
 			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE));
-			responseModel.setResponseMessage(messageUtil.getBundle("otp.send.success"));
+			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_MESSAGE));
 		} catch (FormExceptions fe) {
 			for (Entry<String, Exception> entry : fe.getExceptions().entrySet()) {
 				responseModel.setResponseCode(entry.getKey());
 				responseModel.setResponseMessage(entry.getValue().getMessage());
 				if (logger.isInfoEnabled()) {
-					logger.info("FormExceptions in Get Bookings -- "+Util.errorToString(fe));
+					logger.info("FormExceptions in Get Bookings -- " + Util.errorToString(fe));
 				}
 				break;
 			}
 		} catch (Exception e) {
 			if (logger.isInfoEnabled()) {
-				logger.info("Exception in Get Bookings -- "+Util.errorToString(e));
+				logger.info("Exception in Get Bookings -- " + Util.errorToString(e));
 			}
 			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_ERROR_CODE));
 			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_ERROR_MESSAGE));
 		}
 
-		Util.printLog(responseModel, AuthConstant.OUTGOING, "Get Bookings", request);
+		Util.printLog(responseModel, AuthConstant.OUTGOING, "get-bookings", request);
 
 		if (logger.isInfoEnabled()) {
 			logger.info("getBookings -- END");
 		}
-		
+
+		if (responseModel.getResponseCode().equals(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE))) {
+			return new ResponseEntity<>(responseModel, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PostMapping(value = "/validate-booking", produces = "application/json")
+	@ApiOperation(value = "Validate Booking", response = ResponseModel.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 201, message = "Please Try after Sometime!!!") })
+
+	public ResponseEntity<ResponseModel> validateBooking(@RequestBody BookingModel bookingModel) {
+		if (logger.isInfoEnabled()) {
+			logger.info("validateBooking -- START");
+		}
+
+		ResponseModel responseModel = new ResponseModel();
+		Util.printLog(bookingModel, AuthConstant.INCOMING, "validate-booking", request);
+		try {
+			BookingModel bookingModel2 = bookingService.validateBooking(bookingModel);
+			responseModel.setResponseBody(bookingModel2);
+			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE));
+			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_MESSAGE));
+		} catch (FormExceptions fe) {
+			for (Entry<String, Exception> entry : fe.getExceptions().entrySet()) {
+				responseModel.setResponseCode(entry.getKey());
+				responseModel.setResponseMessage(entry.getValue().getMessage());
+				if (logger.isInfoEnabled()) {
+					logger.info("FormExceptions in Validate Booking -- " + Util.errorToString(fe));
+				}
+				break;
+			}
+		} catch (Exception e) {
+			if (logger.isInfoEnabled()) {
+				logger.info("Exception in Validate Booking -- " + Util.errorToString(e));
+			}
+			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_ERROR_CODE));
+			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_ERROR_MESSAGE));
+		}
+
+		Util.printLog(responseModel, AuthConstant.OUTGOING, "validate-booking", request);
+
+		if (logger.isInfoEnabled()) {
+			logger.info("validateBooking -- END");
+		}
+
 		if (responseModel.getResponseCode().equals(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE))) {
 			return new ResponseEntity<>(responseModel, HttpStatus.OK);
 		} else {
@@ -157,46 +198,94 @@ public class BookingController extends BaseController {
 	}
 	
 	
-	@PostMapping(value = "/validate-booking", produces = "application/json")
-	@ApiOperation(value = "Validate Booking", response = ResponseModel.class)
+	@PostMapping(value = "/get-property-bookings", produces = "application/json")
+	@ApiOperation(value = "Property Bookings", response = ResponseModel.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 201, message = "Please Try after Sometime!!!") })
-	
-	public ResponseEntity<ResponseModel> validateBooking(@RequestBody BookingModel bookingModel) {
+
+	public ResponseEntity<ResponseModel> getPropertyBookings(@RequestBody BookingModel bookingModel) {
 		if (logger.isInfoEnabled()) {
-			logger.info("validateBooking -- START");
+			logger.info("getPropertyBookings -- START");
 		}
 
 		ResponseModel responseModel = new ResponseModel();
-		Util.printLog(bookingModel, AuthConstant.INCOMING, "Validate Booking", request);
+		Util.printLog(bookingModel, AuthConstant.INCOMING, "get-property-bookings", request);
 		try {
-			BookingModel bookingModel2 = bookingService.validateBooking(bookingModel);
-			responseModel.setResponseBody(bookingModel2);
+			List<BookingModel> bookingModels = bookingService.getPropertyBookings(bookingModel);
+			responseModel.setResponseBody(bookingModels);
 			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE));
-			responseModel.setResponseMessage(messageUtil.getBundle("otp.send.success"));
+			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_MESSAGE));
 		} catch (FormExceptions fe) {
 			for (Entry<String, Exception> entry : fe.getExceptions().entrySet()) {
 				responseModel.setResponseCode(entry.getKey());
 				responseModel.setResponseMessage(entry.getValue().getMessage());
 				if (logger.isInfoEnabled()) {
-					logger.info("FormExceptions in Validate Booking -- "+Util.errorToString(fe));
+					logger.info("FormExceptions in getPropertyBookings -- " + Util.errorToString(fe));
 				}
 				break;
 			}
 		} catch (Exception e) {
 			if (logger.isInfoEnabled()) {
-				logger.info("Exception in Validate Booking -- "+Util.errorToString(e));
+				logger.info("Exception in getPropertyBookings -- " + Util.errorToString(e));
 			}
 			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_ERROR_CODE));
 			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_ERROR_MESSAGE));
 		}
 
-		Util.printLog(responseModel, AuthConstant.OUTGOING, "Validate Booking", request);
+		Util.printLog(responseModel, AuthConstant.OUTGOING, "get-property-bookings", request);
 
 		if (logger.isInfoEnabled()) {
-			logger.info("validateBooking -- END");
+			logger.info("getPropertyBookings -- END");
 		}
-		
+
+		if (responseModel.getResponseCode().equals(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE))) {
+			return new ResponseEntity<>(responseModel, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
+	@PostMapping(value = "/get-user-bookings", produces = "application/json")
+	@ApiOperation(value = "User Bookings", response = ResponseModel.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 201, message = "Please Try after Sometime!!!") })
+
+	public ResponseEntity<ResponseModel> getUserBookings(@RequestBody BookingModel bookingModel) {
+		if (logger.isInfoEnabled()) {
+			logger.info("getUserBookings -- START");
+		}
+
+		ResponseModel responseModel = new ResponseModel();
+		Util.printLog(bookingModel, AuthConstant.INCOMING, "get-user-bookings", request);
+		try {
+			List<BookingModel> bookingModels = bookingService.getUserBookings(bookingModel);
+			responseModel.setResponseBody(bookingModels);
+			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE));
+			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_MESSAGE));
+		} catch (FormExceptions fe) {
+			for (Entry<String, Exception> entry : fe.getExceptions().entrySet()) {
+				responseModel.setResponseCode(entry.getKey());
+				responseModel.setResponseMessage(entry.getValue().getMessage());
+				if (logger.isInfoEnabled()) {
+					logger.info("FormExceptions in getPropertyBookings -- " + Util.errorToString(fe));
+				}
+				break;
+			}
+		} catch (Exception e) {
+			if (logger.isInfoEnabled()) {
+				logger.info("Exception in getUserBookings -- " + Util.errorToString(e));
+			}
+			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_ERROR_CODE));
+			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_ERROR_MESSAGE));
+		}
+
+		Util.printLog(responseModel, AuthConstant.OUTGOING, "get-user-bookings", request);
+
+		if (logger.isInfoEnabled()) {
+			logger.info("getUserBookings -- END");
+		}
+
 		if (responseModel.getResponseCode().equals(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE))) {
 			return new ResponseEntity<>(responseModel, HttpStatus.OK);
 		} else {

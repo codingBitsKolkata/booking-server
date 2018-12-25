@@ -12,19 +12,26 @@ import com.orastays.booking.bookingserver.entity.BookingInfoEntity;
 import com.orastays.booking.bookingserver.helper.Util;
 import com.orastays.booking.bookingserver.model.BookingInfoModel;
 
-
 @Component
 public class BookingInfoConverter extends CommonConverter
 		implements BaseConverter<BookingInfoEntity, BookingInfoModel> {
 
-	
 	private static final long serialVersionUID = 4689490274519200855L;
 	private static final Logger logger = LogManager.getLogger(BookingInfoConverter.class);
 
 	@Override
 	public BookingInfoEntity modelToEntity(BookingInfoModel m) {
-		// TODO Auto-generated method stub
-		return null;
+		if (logger.isInfoEnabled()) {
+			logger.info("modelToEntity -- START");
+		}
+
+		BookingInfoEntity bookingInfoEntity = new BookingInfoEntity();
+
+		bookingInfoEntity = (BookingInfoEntity) Util.transform(modelMapper, m, bookingInfoEntity);
+		if (logger.isInfoEnabled()) {
+			logger.info("modelToEntity -- END");
+		}
+		return bookingInfoEntity;
 	}
 
 	@Override
