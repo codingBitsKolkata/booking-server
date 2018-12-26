@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -117,6 +118,11 @@ public class BookingVsRoomEntity extends CommonEntity {
 	@Column(name = "num_of_shared_cot")
 	@JsonProperty("numOfSharedCot")
 	private String numOfSharedCot;
+	
+	
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "bookingVsRoomEntity", cascade = { CascadeType.ALL })
+	@JsonProperty("cancellationVsRooms")
+	private CancellationVsRoomEntity cancellationVsRoomEntity;
 
 	
 	@Override

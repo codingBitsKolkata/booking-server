@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.orastays.booking.bookingserver.entity.CancellationEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.EqualsAndHashCode;
@@ -74,6 +75,9 @@ public class BookingModel extends CommonModel {
 	
 	@JsonProperty("userInfo")
 	private UserInfo userInfo;
+	
+	@JsonProperty("cancellations")
+	private CancellationModel cancellationModel;
 }
 
 

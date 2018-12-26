@@ -101,6 +101,10 @@ public class BookingEntity extends CommonEntity {
 	@JsonProperty("bookingVsPayments")
 	private List<BookingVsPaymentEntity> bookingVsPaymentEntities;
 	
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "bookingEntity", cascade = { CascadeType.ALL })
+	@JsonProperty("cancellations")
+	private CancellationEntity cancellationEntity;
+	
 	@Override
 	public String toString() {
 		return Long.toString(bookingId);
