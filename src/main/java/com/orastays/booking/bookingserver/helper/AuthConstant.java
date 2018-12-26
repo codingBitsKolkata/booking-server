@@ -17,4 +17,8 @@ public final class AuthConstant {
 	public static final String MODE_CASH = "cash";
 	public static final String MODE_CASHLESS = "cashfree";
 	public static final String MODE_PARTIAL = "partial";
+	
+	//cashfreeapi status
+	public static final String CASHFREE_OK = "OK";
+	public static final String CASHFREE_ERROR = "ERROR";
 }

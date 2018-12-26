@@ -21,4 +21,7 @@ public class PaymentModel {
 	
 	@JsonProperty("paymentLink")
 	private String paymentLink;
+	
+	@JsonProperty("reason")
+	private String reason;
 }

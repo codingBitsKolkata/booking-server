@@ -21,4 +21,7 @@ public class FormOfPayment {
 
 	@JsonProperty("percentage")
 	private String percentage;
+	
+	@JsonProperty("currency")
+	private String currency;
 }

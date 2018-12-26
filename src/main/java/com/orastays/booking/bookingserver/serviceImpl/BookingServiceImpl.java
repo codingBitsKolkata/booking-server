@@ -29,10 +29,12 @@ import com.orastays.booking.bookingserver.entity.BookingVsRoomOraDiscountEntity;
 import com.orastays.booking.bookingserver.entity.ConvenienceEntity;
 import com.orastays.booking.bookingserver.entity.GstSlabEntity;
 import com.orastays.booking.bookingserver.exceptions.FormExceptions;
+import com.orastays.booking.bookingserver.helper.AuthConstant;
 import com.orastays.booking.bookingserver.helper.BookingStatus;
 import com.orastays.booking.bookingserver.helper.PropertyLocation;
 import com.orastays.booking.bookingserver.helper.RoomStatus;
 import com.orastays.booking.bookingserver.helper.Status;
+import com.orastays.booking.bookingserver.helper.SynchronizedRoomBooking;
 import com.orastays.booking.bookingserver.helper.Util;
 import com.orastays.booking.bookingserver.model.BookingModel;
 import com.orastays.booking.bookingserver.model.BookingPriceModel;
@@ -87,10 +89,11 @@ public class BookingServiceImpl implements BookingService {
 	@Autowired
 	protected BookingInfoDAO bookingInfoDAO;
 	
-	
 	@Value("${entitymanager.packagesToScan}")
 	protected String entitymanagerPackagesToScan;
 	
+	@Autowired
+	protected SynchronizedRoomBooking synchronizedRoomBooking;
 
 	@Override
 	public BookingModel validateBooking(BookingModel bookingModel) throws FormExceptions {
@@ -156,19 +159,19 @@ public class BookingServiceImpl implements BookingService {
 		}
 
 		bookingValidation.validateBookingBeforePayment(bookingModel);
-		populateBookingEntityForPayment(bookingModel);
+		PaymentModel paymentModel = populateBookingEntityForPayment(bookingModel);
 		if (logger.isInfoEnabled()) {
 			logger.info("addBooking -- END");
 		}
 
-		return null;
+		return paymentModel;
 
 	}
 
-	void populateBookingEntityForPayment(BookingModel bookingModel) {
+	PaymentModel populateBookingEntityForPayment(BookingModel bookingModel) {
 
 		BookingEntity bookingEntity = bookingConverter.modelToEntity(bookingModel);
-
+		PaymentModel paymentModel = null;
 		// set booking master attributes
 		try {
 			bookingEntity.setOrabookingId("ORA" + new Date().getTime());
@@ -285,9 +288,15 @@ public class BookingServiceImpl implements BookingService {
 			bookingDAO.update(bookingEntity2);
 			
 			//set booking vs payment
+			if(bookingModel.getFormOfPayment().getMode().equalsIgnoreCase(AuthConstant.MODE_CASH) || bookingModel.getFormOfPayment().getMode().equalsIgnoreCase(AuthConstant.MODE_PARTIAL)) {
+				paymentModel = synchronizedRoomBooking.bookRoomForCashPayments(bookingModel, bookingEntity2);
+			} else {
+				paymentModel = synchronizedRoomBooking.bookRoomForCashLessPayments(bookingModel, bookingEntity2);
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		return paymentModel;
 	}
 
 	@Override
