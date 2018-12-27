@@ -25,6 +25,7 @@ import com.orastays.booking.bookingserver.entity.BookingVsPaymentEntity;
 import com.orastays.booking.bookingserver.exceptions.FormExceptions;
 import com.orastays.booking.bookingserver.model.BookingModel;
 import com.orastays.booking.bookingserver.model.PaymentModel;
+import com.orastays.booking.bookingserver.model.cashfree.RefundModel;
 
 @Component
 @RefreshScope
@@ -51,7 +52,10 @@ public class CashFreeApi {
 
 	@Value("${notifyUrl}")
 	private String notifyUrl;
-	
+
+	@Value("${initiateRefundUrl}")
+	private String initiateRefundUrl;
+
 	@Autowired
 	protected BookingVsPaymentDAO bookingVsPaymentDAO;
 
@@ -78,12 +82,11 @@ public class CashFreeApi {
 		map.add("customerPhone", bm.getUserInfo().getCustomerPhone());
 		map.add("returnUrl", returnUrl);
 		map.add("notifyUrl", notifyUrl);
-		
+
 		ResponseEntity<PaymentModel> response;
 		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<MultiValueMap<String, Object>>(map, headers);
 		try {
-			response = restTemplate.exchange(createOrderUrl, HttpMethod.POST, request,
-					PaymentModel.class);
+			response = restTemplate.exchange(createOrderUrl, HttpMethod.POST, request, PaymentModel.class);
 			if (response.getStatusCode() == HttpStatus.OK) {
 				if (response.getBody().getStatus().equalsIgnoreCase(AuthConstant.CASHFREE_ERROR)) {
 					exceptions.put(messageUtil.getBundle("cashfreecreateorder.error.code"),
@@ -93,7 +96,7 @@ public class CashFreeApi {
 					try {
 						bookingVsPaymentDAO.save(bookingVsPaymentEntity);
 						return response.getBody();
-					} catch(Exception e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 						exceptions.put(messageUtil.getBundle("bookingdb.error.code"),
 								new Exception(messageUtil.getBundle("bookingdb.error.message")));
@@ -110,6 +113,70 @@ public class CashFreeApi {
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("getPaymentLink -- End");
+		}
+
+		return null;
+	}
+
+	/*	 
+	 * This method has to be called
+	 * from a service 
+	 * which initiate refund
+	 * passing referenceid
+	 * of the successful transaction 
+	*/
+	public RefundModel initiateRefund(BookingModel bm, BookingEntity be, BookingVsPaymentEntity bookingVsPaymentEntity)
+			throws FormExceptions {
+		if (logger.isDebugEnabled()) {
+			logger.debug("initiateRefund -- Start");
+		}
+
+		Map<String, Exception> exceptions = new LinkedHashMap<>();
+
+		// generate payment link
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+		map.add("appId", appId);
+		map.add("secretKey", secretKey);
+		map.add("referenceId", bookingVsPaymentEntity.getReferenceId());
+		map.add("refundAmount", ""); // method which can return calculated refund amount
+		map.add("refundNote", "");
+
+		ResponseEntity<RefundModel> response;
+		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<MultiValueMap<String, Object>>(map, headers);
+		try {
+			response = restTemplate.exchange(initiateRefundUrl, HttpMethod.POST, request, RefundModel.class);
+			if (response.getStatusCode() == HttpStatus.OK) {
+				if (response.getBody().getStatus().equalsIgnoreCase(AuthConstant.CASHFREE_ERROR)) {
+					exceptions.put(messageUtil.getBundle("cashfreecreateorder.error.code"),
+							new Exception(messageUtil.getBundle("cashfreecreateorder.error.message")));
+					throw new FormExceptions(exceptions);
+				} else if (response.getBody().getStatus().equalsIgnoreCase(AuthConstant.CASHFREE_OK)) {
+					try {
+						//bookingVsPaymentDAO.save(bookingVsPaymentEntity);
+						
+						//save refund details into db
+						
+						return response.getBody();
+					} catch (Exception e) {
+						e.printStackTrace();
+						exceptions.put(messageUtil.getBundle("bookingdb.error.code"), //change error code and message
+								new Exception(messageUtil.getBundle("bookingdb.error.message")));
+						throw new FormExceptions(exceptions);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			exceptions.put(messageUtil.getBundle("cashfreecreateorder.error.code"),
+					new Exception(messageUtil.getBundle("cashfreecreateorder.error.message")));
+			throw new FormExceptions(exceptions);
+		}
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("initiateRefund -- End");
 		}
 
 		return null;
