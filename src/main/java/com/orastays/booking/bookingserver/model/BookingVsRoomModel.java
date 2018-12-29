@@ -1,10 +1,7 @@
 package com.orastays.booking.bookingserver.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.orastays.booking.bookingserver.entity.CancellationVsRoomEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.EqualsAndHashCode;
@@ -22,6 +19,9 @@ public class BookingVsRoomModel extends CommonModel {
 	@JsonProperty("bookingVsRoomId")
 	private String bookingVsRoomId;
 
+	@JsonProperty("oraRoomName")
+	private String oraRoomName;
+	
 	@JsonProperty("roomId")
 	private String roomId;
 
@@ -30,19 +30,7 @@ public class BookingVsRoomModel extends CommonModel {
 
 	@JsonProperty("numOfCot")
 	private String numOfCot;
-
-	@JsonProperty("ropId")
-	private String ropId;
-
-	@JsonProperty("rhdId")
-	private String rhdId;
 	
-	@JsonProperty("rodId")
-	private String rodId;
-	
-	@JsonProperty("propertyPriceDropId")
-	private String propertyPriceDropId;
-
 	@JsonProperty("roomGSTSlabPrice")
 	private String roomGSTSlabPrice;
 
@@ -58,9 +46,6 @@ public class BookingVsRoomModel extends CommonModel {
 	@JsonProperty("roomActualPrice")
 	private String roomActualPrice;
 	
-	@JsonProperty("bookingPrices")
-	private List<BookingPriceModel> bookingPriceModels;
-
 	@JsonProperty("bookings")
 	private BookingModel bookingModel;
 
@@ -85,13 +70,11 @@ public class BookingVsRoomModel extends CommonModel {
 	@JsonProperty("totalNumOfSharedBed")
 	private String totalNumOfSharedBed;
 	
-	@JsonProperty("BookingVsRoomOraDiscounts")
-	private List<BookingVsRoomOraDiscountModel> bookingVsRoomOraDiscountModels;
-	
 	@JsonProperty("cancellationVsRooms")
 	private CancellationVsRoomModel cancellationVsRoomModel;
 	
-	
+	@JsonProperty("roomVsOfferId")
+	private String roomVsOfferId;
 	
 	
 }

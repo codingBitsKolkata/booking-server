@@ -18,14 +18,10 @@ import com.orastays.booking.bookingserver.converter.BookingInfoConverter;
 import com.orastays.booking.bookingserver.converter.BookingVsRoomConverter;
 import com.orastays.booking.bookingserver.dao.BookingDAO;
 import com.orastays.booking.bookingserver.dao.BookingInfoDAO;
-import com.orastays.booking.bookingserver.dao.BookingPriceDAO;
 import com.orastays.booking.bookingserver.dao.BookingVsRoomDAO;
-import com.orastays.booking.bookingserver.dao.BookingVsRoomOraDiscountDAO;
 import com.orastays.booking.bookingserver.entity.BookingEntity;
 import com.orastays.booking.bookingserver.entity.BookingInfoEntity;
-import com.orastays.booking.bookingserver.entity.BookingPriceEntity;
 import com.orastays.booking.bookingserver.entity.BookingVsRoomEntity;
-import com.orastays.booking.bookingserver.entity.BookingVsRoomOraDiscountEntity;
 import com.orastays.booking.bookingserver.entity.ConvenienceEntity;
 import com.orastays.booking.bookingserver.entity.GstSlabEntity;
 import com.orastays.booking.bookingserver.exceptions.FormExceptions;
@@ -37,9 +33,7 @@ import com.orastays.booking.bookingserver.helper.Status;
 import com.orastays.booking.bookingserver.helper.SynchronizedRoomBooking;
 import com.orastays.booking.bookingserver.helper.Util;
 import com.orastays.booking.bookingserver.model.BookingModel;
-import com.orastays.booking.bookingserver.model.BookingPriceModel;
 import com.orastays.booking.bookingserver.model.BookingVsRoomModel;
-import com.orastays.booking.bookingserver.model.BookingVsRoomOraDiscountModel;
 import com.orastays.booking.bookingserver.model.PaymentModel;
 import com.orastays.booking.bookingserver.service.BookingService;
 import com.orastays.booking.bookingserver.service.ConvenienceService;
@@ -76,12 +70,6 @@ public class BookingServiceImpl implements BookingService {
 
 	@Autowired
 	protected BookingVsRoomDAO bookingVsRoomDAO;
-	
-	@Autowired
-	protected BookingPriceDAO bookingPriceDAO;
-	
-	@Autowired
-	protected BookingVsRoomOraDiscountDAO bookingVsRoomOraDiscountDAO;
 	
 	@Autowired
 	protected BookingInfoConverter bookingInfoConverter;
@@ -201,15 +189,6 @@ public class BookingServiceImpl implements BookingService {
 				bookingVsRoomEntity.setCreatedBy(Long.parseLong(bookingModel.getUserId()));
 				bookingVsRoomEntity.setCreatedDate(Util.getCurrentDateTime());
 				
-//				bookingVsRoomEntity.setRoomId(bookingVsRoomModel.getRoomId());
-//				bookingVsRoomEntity.setNumOfAdult(bookingVsRoomModel.getNumOfAdult());
-//				bookingVsRoomEntity.setNumOfCot(bookingVsRoomModel.getNumOfCot());
-//				bookingVsRoomEntity.setNumOfSharedBed(bookingVsRoomModel.getNumOfSharedBed());
-//				bookingVsRoomEntity.setNumOfSharedCot(bookingVsRoomModel.getNumOfSharedCot());
-//				bookingVsRoomEntity.setRopId(Long.parseLong(bookingVsRoomModel.getRopId()));
-//				bookingVsRoomEntity.setRhdId(Long.parseLong(bookingVsRoomModel.getRhdId()));
-//				bookingVsRoomEntity.setPropertyPriceDropId(Long.parseLong(bookingVsRoomModel.getPropertyPriceDropId()));
-				
 				Double roomActualPrice = Double.parseDouble(bookingVsRoomModel.getRoomActualPrice());
 	
 				GstSlabEntity gstSlabEntity = gstSlabService.getActiveGstEntity(roomActualPrice);
@@ -237,33 +216,7 @@ public class BookingServiceImpl implements BookingService {
 				
 				bookingVsRoomEntity.setBookingEntity(bookingEntity2);
 				
-				Long bookingVsRoomId = (Long) bookingVsRoomDAO.save(bookingVsRoomEntity);
-				BookingVsRoomEntity bookingVsRoomEntity2 = bookingVsRoomDAO.find(bookingVsRoomId);
-				
-				//set booking vs room prices
-				for(BookingPriceModel bookingPriceModel : bookingVsRoomModel.getBookingPriceModels()) {
-					BookingPriceEntity bookingPriceEntity = new BookingPriceEntity();
-					if(bookingPriceModel.getRoomVsPriceId() != null)
-						bookingPriceEntity.setRoomVsPriceId(Long.parseLong(bookingPriceModel.getRoomVsPriceId()));
-					bookingPriceEntity.setBookingVsRoomEntity(bookingVsRoomEntity2);
-					bookingPriceEntity.setCreatedDate(Util.getCurrentDateTime());
-					bookingPriceEntity.setCreatedBy(Long.parseLong(bookingModel.getUserId()));
-					bookingPriceEntity.setStatus(Status.ACTIVE.ordinal());
-					bookingPriceDAO.save(bookingPriceEntity);
-				}
-				
-				//set booking vs ora disount
-				for(BookingVsRoomOraDiscountModel bookingVsRoomOraDiscountModel : bookingVsRoomModel.getBookingVsRoomOraDiscountModels()) {
-					BookingVsRoomOraDiscountEntity bookingVsRoomOraDiscountEntity = new BookingVsRoomOraDiscountEntity();
-					if(bookingVsRoomOraDiscountModel.getRodId() != null)
-						bookingVsRoomOraDiscountEntity.setRodId(bookingVsRoomOraDiscountModel.getRodId());
-					bookingVsRoomOraDiscountEntity.setCreatedBy(Long.parseLong(bookingModel.getUserId()));
-					bookingVsRoomOraDiscountEntity.setCreatedDate(Util.getCurrentDateTime());
-					bookingVsRoomOraDiscountEntity.setStatus(Status.ACTIVE.ordinal());
-					bookingVsRoomOraDiscountEntity.setBookingVsRoomEntity(bookingVsRoomEntity2);
-					bookingVsRoomOraDiscountDAO.save(bookingVsRoomOraDiscountEntity);
-					
-				}
+				bookingVsRoomDAO.save(bookingVsRoomEntity);
 				
 			}
 			

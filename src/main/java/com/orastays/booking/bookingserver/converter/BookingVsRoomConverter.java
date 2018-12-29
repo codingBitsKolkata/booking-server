@@ -18,12 +18,6 @@ public class BookingVsRoomConverter extends CommonConverter
 		implements BaseConverter<BookingVsRoomEntity, BookingVsRoomModel> {
 
 	@Autowired
-	protected BookingVsRoomOraDiscountConverter bookingVsRoomOraDiscountConverter;
-
-	@Autowired
-	protected BookingPriceConverter bookingPriceConverter;
-
-	@Autowired
 	protected SacCodeConverter sacCodeConverter;
 	
 	
@@ -54,8 +48,6 @@ public class BookingVsRoomConverter extends CommonConverter
 
 		BookingVsRoomModel bookingVsRoomModel = new BookingVsRoomModel();
 		bookingVsRoomModel = (BookingVsRoomModel) Util.transform(modelMapper, e, bookingVsRoomModel);
-		bookingVsRoomModel.setBookingVsRoomOraDiscountModels(bookingVsRoomOraDiscountConverter.entityListToModelList(e.getBookingVsRoomOraDiscountEntities()));
-		bookingVsRoomModel.setBookingPriceModels(bookingPriceConverter.entityListToModelList(e.getBookingPriceEntities()));
 		bookingVsRoomModel.setSacCodeModel(sacCodeConverter.entityToModel(e.getSacCodeEntity()));
 		if (logger.isInfoEnabled()) {
 			logger.info("entityToModel -- END");

@@ -3,8 +3,6 @@
  */
 package com.orastays.booking.bookingserver.entity;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -38,7 +35,11 @@ public class BookingVsRoomEntity extends CommonEntity {
 	@Column(name = "booking_vs_room_id")
 	@JsonProperty("bookingVsRoomId")
 	private Long bookingVsRoomId;
-
+	
+	@Column(name = "ora_room_name")
+	@JsonProperty("oraRoomName")
+	private String oraRoomName;
+	
 	@Column(name = "room_id")
 	@JsonProperty("roomId")
 	private String roomId;
@@ -50,22 +51,6 @@ public class BookingVsRoomEntity extends CommonEntity {
 	@Column(name = "num_of_cot")
 	@JsonProperty("numOfCot")
 	private String numOfCot;
-
-	@Column(name = "rop_id")
-	@JsonProperty("ropId")
-	private Long ropId;
-
-	@Column(name = "rhd_id")
-	@JsonProperty("rhdId")
-	private Long rhdId;
-	
-	@Column(name = "rod_id")
-	@JsonProperty("rodId")
-	private Long rodId;
-	
-	@Column(name = "property_pricedrop_id")
-	@JsonProperty("propertyPriceDropId")
-	private Long propertyPriceDropId;
 
 	@Column(name = "room_gst_slab_price")
 	@JsonProperty("roomGSTSlabPrice")
@@ -87,15 +72,6 @@ public class BookingVsRoomEntity extends CommonEntity {
 	@JsonProperty("roomActualPrice")
 	private String roomActualPrice;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bookingVsRoomEntity", cascade = { CascadeType.ALL })
-	@JsonProperty("bookingPrices")
-	private List<BookingPriceEntity> bookingPriceEntities;
-	
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bookingVsRoomEntity", cascade = { CascadeType.ALL })
-	@JsonProperty("BookingVsRoomOraDiscounts")
-	private List<BookingVsRoomOraDiscountEntity> bookingVsRoomOraDiscountEntities;
-
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "booking_id", nullable = false)
 	@JsonProperty("bookings")
@@ -118,6 +94,10 @@ public class BookingVsRoomEntity extends CommonEntity {
 	@Column(name = "num_of_shared_cot")
 	@JsonProperty("numOfSharedCot")
 	private String numOfSharedCot;
+	
+	@Column(name = "room_vs_offer_id")
+	@JsonProperty("roomVsOfferId")
+	private String roomVsOfferId;
 	
 	
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "bookingVsRoomEntity", cascade = { CascadeType.ALL })
