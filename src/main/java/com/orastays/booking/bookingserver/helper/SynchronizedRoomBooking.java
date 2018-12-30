@@ -53,9 +53,7 @@ public class SynchronizedRoomBooking {
 		bookingValidation.validateBookingBeforePayment(bm);
 
 
-		BookingEntity bookingEntity = bookingDAO.find(be.getBookingId());
-
-		bookingEntity.getBookingVsRoomEntities().parallelStream().forEach(room -> {
+		be.getBookingVsRoomEntities().parallelStream().forEach(room -> {
 			room.setStatus(RoomStatus.BOOKED.ordinal());
 			try {
 				bookingVsRoomDAO.update(room);

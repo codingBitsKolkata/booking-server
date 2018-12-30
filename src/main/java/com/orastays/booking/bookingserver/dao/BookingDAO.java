@@ -32,7 +32,7 @@ public class BookingDAO extends GenericDAO<BookingEntity, Long> {
 		return results;
 	}
 
-	@SuppressWarnings({ "unchecked" })
+
 	public boolean getBookedPivateRoom(String propertyId, String roomId, String checkinDate, String checkoutDate) {
 		
 		
@@ -105,9 +105,14 @@ public class BookingDAO extends GenericDAO<BookingEntity, Long> {
 			return false;
 		} else {
 			for(Object[] row : rows) { //there can be max 1 row
-				if(!((Long.parseLong(row[0].toString()) + numberOfSharedBed <= sharedBedCount) && (Long.parseLong(row[1].toString()) + numberOfSharedCot <= sharedCotCount))) {
-					return true;
+				if(row[0] != null && row[1] != null) {
+					if(!((Long.parseLong(row[0].toString()) + numberOfSharedBed <= sharedBedCount) && (Long.parseLong(row[1].toString()) + numberOfSharedCot <= sharedCotCount))) {
+						return true;
+					}
+				} else {
+					return false;
 				}
+				
 			}
 		}
 		} catch(Exception e) {
@@ -115,5 +120,17 @@ public class BookingDAO extends GenericDAO<BookingEntity, Long> {
 			return true;
 		}
 		return false;
+	}
+	
+	public BookingEntity getBookingEntityById(Long id) {
+
+		String hql = "FROM BookingEntity be where be.bookingId = " + id;
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		@SuppressWarnings("rawtypes")
+		List results = query.list();
+		if(results != null && !results.isEmpty()) {
+			return (BookingEntity) results.get(0);
+		}
+		return null;
 	}
 }

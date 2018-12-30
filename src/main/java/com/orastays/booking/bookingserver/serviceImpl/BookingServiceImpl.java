@@ -1,5 +1,6 @@
 package com.orastays.booking.bookingserver.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -180,6 +181,7 @@ public class BookingServiceImpl implements BookingService {
 			
 			Long bookingId = (Long) bookingDAO.save(bookingEntity);
 			BookingEntity bookingEntity2 = bookingDAO.find(bookingId);
+			List<BookingVsRoomEntity> bookingVsRoomEntities = new ArrayList<>();
 			
 			for(BookingVsRoomModel bookingVsRoomModel : bookingModel.getBookingVsRoomModels()) {
 				
@@ -217,7 +219,7 @@ public class BookingServiceImpl implements BookingService {
 				bookingVsRoomEntity.setBookingEntity(bookingEntity2);
 				
 				bookingVsRoomDAO.save(bookingVsRoomEntity);
-				
+				bookingVsRoomEntities.add(bookingVsRoomEntity);
 			}
 			
 			BookingInfoEntity bookingInfoEntity = bookingInfoConverter.modelToEntity(bookingModel.getBookingInfoModel());
@@ -241,6 +243,7 @@ public class BookingServiceImpl implements BookingService {
 			bookingDAO.update(bookingEntity2);
 			
 			//set booking vs payment
+			bookingEntity2.setBookingVsRoomEntities(bookingVsRoomEntities);
 			if(bookingModel.getFormOfPayment().getMode().equalsIgnoreCase(AuthConstant.MODE_CASH) || bookingModel.getFormOfPayment().getMode().equalsIgnoreCase(AuthConstant.MODE_PARTIAL)) {
 				paymentModel = synchronizedRoomBooking.bookRoomForCashPayments(bookingModel, bookingEntity2);
 			} else {
@@ -313,5 +316,5 @@ public class BookingServiceImpl implements BookingService {
 
 		return bookingModels;
 	}
-
+	
 }

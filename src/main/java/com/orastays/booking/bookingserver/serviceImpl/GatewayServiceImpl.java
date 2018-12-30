@@ -39,7 +39,7 @@ public class GatewayServiceImpl implements GatewayService {
 		try {
 			Map<String, String> innerMap1 = new LinkedHashMap<>();
 			innerMap1.put("status", String.valueOf(Status.ACTIVE.ordinal()));
-			innerMap1.put("gateway_name", gatewayName.toUpperCase());
+			innerMap1.put("gatewayName", gatewayName.toUpperCase());
 			Map<String, Map<String, String>> outerMap1 = new LinkedHashMap<>();
 			outerMap1.put("eq", innerMap1);
 
