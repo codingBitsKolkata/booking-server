@@ -16,10 +16,14 @@ import com.orastays.booking.bookingserver.dao.CancellationDAO;
 import com.orastays.booking.bookingserver.dao.CancellationVsRoomDAO;
 import com.orastays.booking.bookingserver.entity.BookingEntity;
 import com.orastays.booking.bookingserver.entity.BookingVsPaymentEntity;
+import com.orastays.booking.bookingserver.entity.CancellationEntity;
+import com.orastays.booking.bookingserver.entity.CancellationVsRoomEntity;
+import com.orastays.booking.bookingserver.helper.AuthConstant;
 import com.orastays.booking.bookingserver.helper.BookingStatus;
 import com.orastays.booking.bookingserver.helper.PaymentStatus;
 import com.orastays.booking.bookingserver.helper.RoomStatus;
 import com.orastays.booking.bookingserver.helper.RoomUpdateAfterGatewayPayment;
+import com.orastays.booking.bookingserver.helper.Status;
 import com.orastays.booking.bookingserver.helper.Util;
 import com.orastays.booking.bookingserver.service.BookingVsPaymentService;
 import com.orastays.booking.bookingserver.service.NotifyService;
@@ -108,6 +112,21 @@ public class NotifyServiceImpl implements NotifyService {
 
 			bookingDAO.update(bookingEntity);
 
+			//insert into cancellation
+			CancellationEntity cancellationEntity = new CancellationEntity();
+			cancellationEntity.setCreatedBy(bookingEntity.getCreatedBy());
+			cancellationEntity.setCreatedDate(Util.getCurrentDateTime());
+			cancellationEntity.setStatus(Status.INACTIVE.ordinal());
+			cancellationEntity.setReasonForCancellation(AuthConstant.USER_CANCELLED_BOOKING_IN_GATEWAY);
+			cancellationEntity.setTotalAmountPaid(bookingVsPaymentEntity.getOrderAmount());
+			cancellationEntity.setTotalAmountRefunded(bookingVsPaymentEntity.getAmountPaid());
+			cancellationEntity.setTotalPaybleWithoutGst(bookingEntity.getTotalPaybleWithoutGST());
+			cancellationEntity.setBookingEntity(bookingEntity);
+			cancellationEntity.setUserId(String.valueOf(bookingVsPaymentEntity.getCreatedBy()));
+			
+			Long id = (Long) cancellationDAO.save(cancellationEntity);
+			CancellationEntity cancellationEntity2 = cancellationDAO.find(id);
+			
 			// update booking vs room
 
 			bookingEntity.getBookingVsRoomEntities().parallelStream().forEach(room -> {
@@ -115,8 +134,18 @@ public class NotifyServiceImpl implements NotifyService {
 				room.setModifiedDate(Util.getCurrentDateTime());
 				room.setStatus(RoomStatus.INACTIVE.ordinal());
 				bookingVsRoomDAO.update(room);
+				
+				//insert into cancellation vs room
+				CancellationVsRoomEntity cancellationVsRoomEntity = new CancellationVsRoomEntity();
+				cancellationVsRoomEntity.setCreatedBy(bookingEntity.getCreatedBy());
+				cancellationVsRoomEntity.setCreatedDate(Util.getCurrentDateTime());
+				cancellationVsRoomEntity.setStatus(Status.INACTIVE.ordinal());
+				cancellationVsRoomEntity.setBookingVsRoomEntity(room);
+				cancellationVsRoomEntity.setCancellationEntity(cancellationEntity2);
+				
+				cancellationVsRoomDAO.save(cancellationVsRoomEntity);
 			});
-
+			
 			// for partial payment the cash payment status also needs to be set to cancelled
 			bookingEntity.getBookingVsPaymentEntities().forEach(bpe -> {
 				// there can be max 2 rows for a payment. One for cash, one for cashless
@@ -133,7 +162,6 @@ public class NotifyServiceImpl implements NotifyService {
 				}
 			});
 
-			// insert into cancellation
 
 		} catch (Exception e) {
 			e.printStackTrace();

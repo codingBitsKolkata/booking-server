@@ -12,9 +12,15 @@ import org.springframework.stereotype.Component;
 import com.orastays.booking.bookingserver.dao.BookingDAO;
 import com.orastays.booking.bookingserver.dao.BookingVsPaymentDAO;
 import com.orastays.booking.bookingserver.dao.BookingVsRoomDAO;
+import com.orastays.booking.bookingserver.dao.CancellationDAO;
+import com.orastays.booking.bookingserver.dao.CancellationVsRoomDAO;
 import com.orastays.booking.bookingserver.entity.BookingEntity;
 import com.orastays.booking.bookingserver.entity.BookingVsPaymentEntity;
 import com.orastays.booking.bookingserver.entity.BookingVsRoomEntity;
+import com.orastays.booking.bookingserver.entity.CancellationEntity;
+import com.orastays.booking.bookingserver.entity.CancellationVsRoomEntity;
+import com.orastays.booking.bookingserver.exceptions.FormExceptions;
+import com.orastays.booking.bookingserver.model.cashfree.RefundModel;
 import com.orastays.booking.bookingserver.service.BookingVsPaymentService;
 import com.orastays.booking.bookingserver.service.BookingVsRoomService;
 import com.orastays.booking.bookingserver.serviceImpl.NotifyServiceImpl;
@@ -38,6 +44,15 @@ public class RoomUpdateAfterGatewayPayment {
 	@Autowired
 	protected BookingVsRoomService bookingVsRoomService;
 
+	@Autowired
+	protected CashFreeApi cashFreeApi;
+	
+	@Autowired
+	protected CancellationDAO cancellationDAO;
+	
+	@Autowired
+	protected CancellationVsRoomDAO cancellationVsRoomDAO;
+	
 	public synchronized void checkRoomStatusAndBookOrRefund(Map<String, String> paramMap) {
 		if (logger.isInfoEnabled()) {
 			logger.info("checkRoomStatusAndBookOrRefund -- START");
@@ -83,6 +98,7 @@ public class RoomUpdateAfterGatewayPayment {
 
 		if (bookingVsRoomEntities.size() > 0) {
 			// initiate refund and set cash part to cancelled
+			initiateRefund(bookingEntity, bookingVsPaymentEntity);
 		} else {
 			if (Double.parseDouble(bookingVsPaymentEntity.getOrderAmount()) == Double
 					.parseDouble((paramMap.get("orderAmount")))) {
@@ -97,6 +113,8 @@ public class RoomUpdateAfterGatewayPayment {
 				});
 
 				// update booking vs payment
+				bookingVsPaymentEntity.setModifiedBy(bookingVsPaymentEntity.getCreatedBy());
+				bookingVsPaymentEntity.setModifiedDate(Util.getCurrentDateTime());
 				bookingVsPaymentEntity.setStatus(PaymentStatus.COMPLETED.ordinal());
 
 				bookingVsPaymentDAO.update(bookingVsPaymentEntity);
@@ -118,7 +136,72 @@ public class RoomUpdateAfterGatewayPayment {
 	
 	//initiate refund and update booking master, bookingVsRoom, bookingVsPayment and cancellation
 	public void initiateRefund(BookingEntity bookingEntity, BookingVsPaymentEntity bookingVsPaymentEntity) {
+		bookingVsPaymentEntity.setModifiedBy(bookingVsPaymentEntity.getCreatedBy());
+		bookingVsPaymentEntity.setModifiedDate(Util.getCurrentDateTime());
+		bookingVsPaymentEntity.setStatus(PaymentStatus.CANCELLED.ordinal());
 		
+		try {
+			RefundModel refundModel = cashFreeApi.initiateRefund(bookingEntity, bookingVsPaymentEntity, bookingVsPaymentEntity.getOrderAmount(), AuthConstant.REFUND_CONCURRENT_BOOKING_NOTE);
+			if(refundModel.getStatus().equalsIgnoreCase(AuthConstant.CASHFREE_OK)) {
+				
+				CancellationEntity cancellationEntity = new CancellationEntity();
+				cancellationEntity.setCreatedBy(bookingEntity.getCreatedBy());
+				cancellationEntity.setCreatedDate(Util.getCurrentDateTime());
+				cancellationEntity.setStatus(Status.INACTIVE.ordinal());
+				cancellationEntity.setReasonForCancellation(AuthConstant.REFUND_CONCURRENT_BOOKING_NOTE);
+				cancellationEntity.setTotalAmountPaid(bookingVsPaymentEntity.getOrderAmount());
+				cancellationEntity.setTotalAmountRefunded(bookingVsPaymentEntity.getAmountPaid());
+				cancellationEntity.setTotalPaybleWithoutGst(bookingEntity.getTotalPaybleWithoutGST());
+				cancellationEntity.setBookingEntity(bookingEntity);
+				cancellationEntity.setUserId(String.valueOf(bookingVsPaymentEntity.getCreatedBy()));
+				
+				Long id = (Long) cancellationDAO.save(cancellationEntity);
+				CancellationEntity cancellationEntity2 = cancellationDAO.find(id);
+				
+				bookingEntity.getBookingVsRoomEntities().parallelStream().forEach(room -> {
+					room.setModifiedBy(room.getCreatedBy());
+					room.setModifiedDate(Util.getCurrentDateTime());
+					room.setStatus(RoomStatus.INACTIVE.ordinal());
+					bookingVsRoomDAO.update(room);
+					
+					//insert into cancellation vs room
+					CancellationVsRoomEntity cancellationVsRoomEntity = new CancellationVsRoomEntity();
+					cancellationVsRoomEntity.setCreatedBy(bookingEntity.getCreatedBy());
+					cancellationVsRoomEntity.setCreatedDate(Util.getCurrentDateTime());
+					cancellationVsRoomEntity.setStatus(Status.INACTIVE.ordinal());
+					cancellationVsRoomEntity.setBookingVsRoomEntity(room);
+					cancellationVsRoomEntity.setCancellationEntity(cancellationEntity2);
+					
+					cancellationVsRoomDAO.save(cancellationVsRoomEntity);
+				});
+				
+				//update booking entity
+				bookingEntity.setModifiedBy(bookingEntity.getCreatedBy());
+				bookingEntity.setModifiedDate(Util.getCurrentDateTime());
+				bookingEntity.setStatus(BookingStatus.CANCELLED.ordinal());
+				bookingDAO.update(bookingEntity);
+				
+				//update booking vs payment entity
+				bookingVsPaymentDAO.update(bookingVsPaymentEntity);
+				
+				bookingEntity.getBookingVsPaymentEntities().forEach(bpe -> {
+					if (bpe.getGatewayEntity().getGatewayId() != bookingVsPaymentEntity.getGatewayEntity().getGatewayId()) {
+						// cash payment checking
+
+						bpe.setModifiedBy(bpe.getCreatedBy());
+						bpe.setModifiedDate(Util.getCurrentDateTime());
+						bpe.setStatus(PaymentStatus.CANCELLED.ordinal());
+						bookingVsPaymentDAO.update(bpe);
+					}
+				});
+				//insert into cancellation
+			} else {
+				//refund not done
+			}
+		} catch (FormExceptions e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

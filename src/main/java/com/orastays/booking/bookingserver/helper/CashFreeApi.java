@@ -125,7 +125,7 @@ public class CashFreeApi {
 	 * passing referenceid
 	 * of the successful transaction 
 	*/
-	public RefundModel initiateRefund(BookingModel bm, BookingEntity be, BookingVsPaymentEntity bookingVsPaymentEntity)
+	public RefundModel initiateRefund(BookingEntity be, BookingVsPaymentEntity bookingVsPaymentEntity, String refundAmount, String refundNote)
 			throws FormExceptions {
 		if (logger.isDebugEnabled()) {
 			logger.debug("initiateRefund -- Start");
@@ -141,8 +141,8 @@ public class CashFreeApi {
 		map.add("appId", appId);
 		map.add("secretKey", secretKey);
 		map.add("referenceId", bookingVsPaymentEntity.getReferenceId());
-		map.add("refundAmount", ""); // method which can return calculated refund amount
-		map.add("refundNote", "");
+		map.add("refundAmount", refundAmount); // method which can return calculated refund amount
+		map.add("refundNote", refundNote);
 
 		ResponseEntity<RefundModel> response;
 		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<MultiValueMap<String, Object>>(map, headers);
