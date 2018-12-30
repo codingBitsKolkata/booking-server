@@ -56,7 +56,7 @@ public class NotifyServiceImpl implements NotifyService {
 			logger.info("updateBookingStatus -- START");
 		}
 
-		if (!paramMap.get("txStatus").equals("SUCCESS")) {
+		if (paramMap.get("txStatus").equals("SUCCESS")) {
 			// validate booking and initiate refund if already room booked
 			roomUpdateAfterGatewayPayment.checkRoomStatusAndBookOrRefund(paramMap);
 

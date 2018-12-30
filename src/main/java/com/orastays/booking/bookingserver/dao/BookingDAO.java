@@ -106,7 +106,7 @@ public class BookingDAO extends GenericDAO<BookingEntity, Long> {
 		} else {
 			for(Object[] row : rows) { //there can be max 1 row
 				if(row[0] != null && row[1] != null) {
-					if(!((Long.parseLong(row[0].toString()) + numberOfSharedBed <= sharedBedCount) && (Long.parseLong(row[1].toString()) + numberOfSharedCot <= sharedCotCount))) {
+					if(!((Double.parseDouble(row[0].toString()) + numberOfSharedBed <= sharedBedCount) && (Double.parseDouble(row[1].toString()) + numberOfSharedCot <= sharedCotCount))) {
 						return true;
 					}
 				} else {

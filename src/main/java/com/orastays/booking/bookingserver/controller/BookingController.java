@@ -62,7 +62,7 @@ public class BookingController extends BaseController {
 		}
 
 		ResponseModel responseModel = new ResponseModel();
-		Util.printLog(bookingModel, AuthConstant.INCOMING, "Add Booking", request);
+		Util.printLog(bookingModel, AuthConstant.INCOMING, "add-booking", request);
 		try {
 			PaymentModel paymentModel = bookingService.addBooking(bookingModel);
 			responseModel.setResponseBody(paymentModel);
@@ -73,7 +73,7 @@ public class BookingController extends BaseController {
 				responseModel.setResponseCode(entry.getKey());
 				responseModel.setResponseMessage(entry.getValue().getMessage());
 				if (logger.isInfoEnabled()) {
-					logger.info("FormExceptions in Add Booking -- " + Util.errorToString(fe));
+					logger.info("FormExceptions in add-booking -- " + Util.errorToString(fe));
 				}
 				break;
 			}
@@ -85,7 +85,7 @@ public class BookingController extends BaseController {
 			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_ERROR_MESSAGE));
 		}
 
-		Util.printLog(responseModel, AuthConstant.OUTGOING, "Add Booking", request);
+		Util.printLog(responseModel, AuthConstant.OUTGOING, "add-booking", request);
 
 		if (logger.isInfoEnabled()) {
 			logger.info("addBooking -- END");

@@ -67,8 +67,8 @@ public class BookingValidation {
 		});
 
 		if (booked.size() > 0) {
-			exceptions.put(messageUtil.getBundle("device.id.null.code"),
-					new Exception(messageUtil.getBundle("device.id.null.message")));
+			exceptions.put(messageUtil.getBundle("roombooked.error.code"),
+					new Exception(messageUtil.getBundle("roombooked.error.message")));
 			throw new FormExceptions(exceptions);
 		}
 

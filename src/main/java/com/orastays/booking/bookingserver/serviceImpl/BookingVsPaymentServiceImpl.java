@@ -42,12 +42,12 @@ public class BookingVsPaymentServiceImpl implements BookingVsPaymentService{
 			outerMap1.put("eq", innerMap1);
 
 			Map<String, Map<String, Map<String, String>>> alliasMap = new LinkedHashMap<>();
-			alliasMap.put(entitymanagerPackagesToScan + ".ConvenienceEntity", outerMap1);
+			alliasMap.put(entitymanagerPackagesToScan + ".BookingVsPaymentEntity", outerMap1);
 
 			bookingVsPaymentEntity = bookingVsPaymentDAO.fetchObjectBySubCiteria(alliasMap);
 		} catch (Exception e) {
 			if (logger.isInfoEnabled()) {
-				logger.info("Exception in getActiveConvenienceEntity -- " + Util.errorToString(e));
+				logger.info("Exception in getBookingVsPaymentEntityByOrderId -- " + Util.errorToString(e));
 			}
 		}
 		if (logger.isDebugEnabled()) {
