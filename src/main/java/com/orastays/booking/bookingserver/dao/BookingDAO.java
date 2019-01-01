@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import com.orastays.booking.bookingserver.entity.BookingEntity;
 import com.orastays.booking.bookingserver.helper.BookingStatus;
-import com.orastays.booking.bookingserver.helper.Status;
 
 @Repository
 public class BookingDAO extends GenericDAO<BookingEntity, Long> {

@@ -93,7 +93,7 @@ public class BookingServiceImpl implements BookingService {
 		BookingModel bookingModel2 = null;
 		try {
 			Map<String, String> innerMap1 = new LinkedHashMap<>();
-			innerMap1.put("status", String.valueOf(Status.ACTIVE.ordinal()));
+			innerMap1.put("status", String.valueOf(BookingStatus.BOOKED.ordinal()));
 			innerMap1.put("bookingId", bookingModel.getBookingId());
 			innerMap1.put("propertyId", bookingModel.getPropertyId());
 			innerMap1.put("userId", bookingModel.getUserId());

@@ -26,4 +26,8 @@ public final class AuthConstant {
 	public static final String REFUND_CONCURRENT_BOOKING_NOTE = "Rooms are already booked. Refunding the booking amount.";
 	public static final String USER_CANCELLED_BOOKING_IN_GATEWAY = "User cancelled booking in payment gateway";
 	
+	//user booking cancellation note
+	public static final String USER_CANCELLED_BOOKING =  "User cancelled booking";
+	
+	public static final String CANCELLATION_SUCCESS_MESSAGE = "cancellation.success.message";
 }

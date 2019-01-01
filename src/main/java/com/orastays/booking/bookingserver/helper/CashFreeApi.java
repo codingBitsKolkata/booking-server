@@ -150,8 +150,8 @@ public class CashFreeApi {
 			response = restTemplate.exchange(initiateRefundUrl, HttpMethod.POST, request, RefundModel.class);
 			if (response.getStatusCode() == HttpStatus.OK) {
 				if (response.getBody().getStatus().equalsIgnoreCase(AuthConstant.CASHFREE_ERROR)) {
-					exceptions.put(messageUtil.getBundle("cashfreecreateorder.error.code"),
-							new Exception(messageUtil.getBundle("cashfreecreateorder.error.message")));
+					exceptions.put(messageUtil.getBundle("cashfreerefund.error.code"),
+							new Exception(messageUtil.getBundle("cashfreerefund.error.message")));
 					throw new FormExceptions(exceptions);
 				} else if (response.getBody().getStatus().equalsIgnoreCase(AuthConstant.CASHFREE_OK)) {
 					try {
