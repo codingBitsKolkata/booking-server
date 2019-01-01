@@ -24,7 +24,7 @@ public class BookingDAO extends GenericDAO<BookingEntity, Long> {
 	@SuppressWarnings("unchecked")
 	public List<BookingEntity> getBookingsByCheckInDate(String date, String propertyId) {
 		String hql = "FROM BookingEntity be where DATE(be.checkinDate) <= DATE('" + date + "')"
-				+ "and DATE(be.checkoutDate) >= DATE('" + date + "')" + "and be.status=" + Status.ACTIVE.ordinal()
+				+ "and DATE(be.checkoutDate) >= DATE('" + date + "')" + "and be.status=" + BookingStatus.BOOKED.ordinal()
 				+ " and be.propertyId = " + Long.parseLong(propertyId);
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		@SuppressWarnings("rawtypes")
