@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.orastays.booking.bookingserver.converter.ConvenienceConverter;
 import com.orastays.booking.bookingserver.dao.ConvenienceDAO;
 import com.orastays.booking.bookingserver.entity.ConvenienceEntity;
 import com.orastays.booking.bookingserver.helper.Status;
 import com.orastays.booking.bookingserver.helper.Util;
+import com.orastays.booking.bookingserver.model.ConvenienceModel;
 import com.orastays.booking.bookingserver.service.ConvenienceService;
 
 @Service
@@ -29,6 +31,8 @@ public class ConvenienceServiceImpl implements ConvenienceService {
 	@Value("${entitymanager.packagesToScan}")
 	protected String entitymanagerPackagesToScan;
 
+	@Autowired
+	protected ConvenienceConverter convenienceConverter;
 	/* (non-Javadoc)
 	 * @see com.orastays.booking.bookingserver.serviceImpl.ConvenienceService#getActiveConvenienceEntity()
 	 */
@@ -61,5 +65,18 @@ public class ConvenienceServiceImpl implements ConvenienceService {
 		}
 
 		return convenienceEntity;
+	}
+
+	@Override
+	public ConvenienceModel getActiveConvenienceModel() {
+		// TODO Auto-generated method stub
+		if (logger.isInfoEnabled()) {
+			logger.info("getActiveConvenienceModel -- START");
+		}
+		ConvenienceModel convenienceModel = convenienceConverter.entityToModel(getActiveConvenienceEntity());
+		if (logger.isInfoEnabled()) {
+			logger.info("getActiveConvenienceModel -- END");
+		}
+		return convenienceModel;
 	}
 }

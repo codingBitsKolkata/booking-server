@@ -12,10 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.orastays.booking.bookingserver.converter.GstSlabConverter;
 import com.orastays.booking.bookingserver.dao.GstSlabDAO;
 import com.orastays.booking.bookingserver.entity.GstSlabEntity;
+import com.orastays.booking.bookingserver.exceptions.FormExceptions;
 import com.orastays.booking.bookingserver.helper.Status;
 import com.orastays.booking.bookingserver.helper.Util;
+import com.orastays.booking.bookingserver.model.GstSlabModel;
 import com.orastays.booking.bookingserver.service.GstSlabService;
 
 @Service
@@ -28,6 +31,9 @@ public class GstSlabServiceImpl implements GstSlabService {
 
 	@Autowired
 	protected GstSlabDAO gstSlabDAO;
+	
+	@Autowired
+	protected GstSlabConverter gstSlabConverter;
 
 	/* (non-Javadoc)
 	 * @see com.orastays.booking.bookingserver.serviceImpl.GstSlabService#getActiveGstEntity(java.lang.Double)
@@ -70,5 +76,18 @@ public class GstSlabServiceImpl implements GstSlabService {
 
 		return gstSlabEntityFetched;
 
+	}
+
+	@Override
+	public GstSlabModel getActiveGstModel(Double amount) throws FormExceptions {
+		// TODO Auto-generated method stub
+		if (logger.isInfoEnabled()) {
+			logger.info("getActiveGstModel -- START");
+		}
+		GstSlabModel gstSlabModel = gstSlabConverter.entityToModel(getActiveGstEntity(amount));
+		if (logger.isInfoEnabled()) {
+			logger.info("getActiveGstModel -- END");
+		}
+		return gstSlabModel;
 	}
 }
