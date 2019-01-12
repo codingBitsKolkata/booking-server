@@ -105,6 +105,30 @@ public class BookingEntity extends CommonEntity {
 	@JsonProperty("cancellations")
 	private CancellationEntity cancellationEntity;
 	
+	@Column(name = "property_offer")
+	@JsonProperty("propertyOffer")
+	private String propertyOffer;
+
+	@Column(name = "convenience_fee")
+	@JsonProperty("convenienceFee")
+	private String convenienceFee;
+
+	@Column(name = "convenience_gst_percentage")
+	@JsonProperty("convenienceGSTPercentage")
+	private String convenienceGSTPercentage;
+
+	@Column(name = "convenience_gst_amount")
+	@JsonProperty("convenienceGSTAmount")
+	private String convenienceGSTAmount;
+	
+	@Column(name = "total_amount")
+	@JsonProperty("totalAmount")
+	private String totalAmount;
+
+	@Column(name = "amount_payable")
+	@JsonProperty("amountPayable")
+	private String amountPayable;
+	
 	@Override
 	public String toString() {
 		return Long.toString(bookingId);

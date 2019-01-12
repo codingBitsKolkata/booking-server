@@ -32,12 +32,12 @@ public class BookingDAO extends GenericDAO<BookingEntity, Long> {
 	}
 
 
-	public boolean getBookedPivateRoom(String propertyId, String roomId, String checkinDate, String checkoutDate) {
+	public boolean getBookedPivateRoom(String propertyId, String oraRoomName, String checkinDate, String checkoutDate) {
 		
 		
 		String hql = "SELECT count(*) as row_count FROM master_booking mb inner join booking_vs_room br on "
 				+ "mb.booking_id = br.booking_id"
-				+ " where mb.property_id = "+ Long.parseLong(propertyId) +" and br.room_id = '" + roomId + "' and br.status = " + BookingStatus.BOOKED.ordinal() + " and "
+				+ " where mb.property_id = "+ Long.parseLong(propertyId) +" and br.room_id = '" + oraRoomName + "' and br.status = " + BookingStatus.BOOKED.ordinal() + " and "
 				+ "("
 					+ "("
 						+ "Date(mb.checkin_date) >= Date('" + checkinDate +"') and DATE(mb.checkout_date) <= Date('" + checkoutDate +"')"
@@ -69,14 +69,14 @@ public class BookingDAO extends GenericDAO<BookingEntity, Long> {
 	}
 
 	@SuppressWarnings({ "unchecked" })
-	public boolean getBookedSharedRoom(String propertyId, String roomId, String checkinDate, String checkoutDate,
+	public boolean getBookedSharedRoom(String propertyId, String oraRoomName, String checkinDate, String checkoutDate,
 			long numberOfSharedBed, long sharedBedCount, long numberOfSharedCot, long sharedCotCount) {
 		
 		
 		String hql = "SELECT sum(ifnull(br.num_of_shared_bed, 0)) as bed_count, sum(ifnull(br.num_of_shared_cot, 0)) as cot_count FROM master_booking mb"
 				+ " inner join booking_vs_room br on "
 				+ "mb.booking_id = br.booking_id"
-				+ " where mb.property_id = "+ Long.parseLong(propertyId) +" and br.room_id = '" + roomId + "' and br.status = " + BookingStatus.BOOKED.ordinal() + " and "
+				+ " where mb.property_id = "+ Long.parseLong(propertyId) +" and br.room_id = '" + oraRoomName + "' and br.status = " + BookingStatus.BOOKED.ordinal() + " and "
 				+ "("
 					+ "("
 						+ "Date(mb.checkin_date) >= Date('" + checkinDate +"') and DATE(mb.checkout_date) <= Date('" + checkoutDate +"')"

@@ -45,7 +45,7 @@ public class BookingValidation {
 		bookingVsRoomModels.parallelStream().forEach(room -> {
 			if (room.getAccommodationModel().getAccommodationId().equals(String.valueOf(AccommodationStatus.PRIVATE.ordinal()))) {
 				boolean privateRoomBookedStatus = bookingDAO.getBookedPivateRoom(bookingModel.getPropertyId(),
-						room.getRoomId(), bookingModel.getCheckinDate(), bookingModel.getCheckoutDate());
+						room.getOraRoomName(), bookingModel.getCheckinDate(), bookingModel.getCheckoutDate());
 				if (privateRoomBookedStatus) {
 					booked.add(bookingModel);
 				}
@@ -58,7 +58,7 @@ public class BookingValidation {
 				Long totalNumberOfSharedBed = Long.parseLong(room.getTotalNumOfSharedBed());
 				Long totalNumberOfSharedCot = Long.parseLong(room.getTotalNumOfSharedCot());
 				boolean sharedRoomBookedStatus = bookingDAO.getBookedSharedRoom(bookingModel.getPropertyId(),
-						room.getRoomId(), bookingModel.getCheckinDate(), bookingModel.getCheckoutDate(),
+						room.getOraRoomName(), bookingModel.getCheckinDate(), bookingModel.getCheckoutDate(),
 						numberOfSharedBed, totalNumberOfSharedBed, numberOfSharedCot, totalNumberOfSharedCot);
 				if (sharedRoomBookedStatus) {
 					booked.add(bookingModel);

@@ -72,7 +72,7 @@ public class CancellationHelper {
 
 		double refundAmount = 0.0;
 		for (BookingVsRoomEntity bookingVsRoomEntity : bookingEntity.getBookingVsRoomEntities()) {
-			double roomActualPrice = Double.parseDouble(bookingVsRoomEntity.getRoomActualPrice());
+			double roomActualPrice = Double.parseDouble(bookingVsRoomEntity.getAmountWithGST());
 			double roomRefundAmount = roomActualPrice * 0.01 * Double
 					.parseDouble(roomCancellationMap.get(bookingVsRoomEntity.getBookingVsRoomId()).getPercentage()) * Integer.parseInt(bookingEntity.getNumOfDays());
 			refundAmount += roomRefundAmount;

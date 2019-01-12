@@ -58,7 +58,6 @@ public class BookingConverter extends CommonConverter implements BaseConverter<B
 		bookingModel.setBookingVsRoomModels(bookingVsRoomConverter.entityListToModelList(e.getBookingVsRoomEntities()));
 		bookingModel.setBookingVsPaymentModels(
 				bookingVsPaymentConverter.entityListToModelList(e.getBookingVsPaymentEntities()));
-		bookingModel.setConvenienceModel(convenienceConverter.entityToModel(e.getConvenienceEntity()));
 		bookingModel.setBookingInfoModel(bookingInfoConverter.entityToModel(e.getBookingInfoEntity()));
 		if (logger.isInfoEnabled()) {
 			logger.info("entityToModel -- END");
