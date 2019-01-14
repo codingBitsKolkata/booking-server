@@ -34,8 +34,6 @@ import com.orastays.booking.bookingserver.model.BookingModel;
 import com.orastays.booking.bookingserver.model.BookingVsRoomModel;
 import com.orastays.booking.bookingserver.model.PaymentModel;
 import com.orastays.booking.bookingserver.service.BookingService;
-import com.orastays.booking.bookingserver.service.ConvenienceService;
-import com.orastays.booking.bookingserver.service.GstSlabService;
 import com.orastays.booking.bookingserver.service.SacService;
 import com.orastays.booking.bookingserver.validations.BookingValidation;
 
@@ -56,12 +54,6 @@ public class BookingServiceImpl implements BookingService {
 
 	@Autowired
 	protected BookingValidation bookingValidation;
-
-	@Autowired
-	protected ConvenienceService convenienceService;
-
-	@Autowired
-	protected GstSlabService gstSlabService;
 
 	@Autowired
 	protected SacService sacService;

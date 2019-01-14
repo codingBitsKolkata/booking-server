@@ -20,9 +20,6 @@ public class BookingConverter extends CommonConverter implements BaseConverter<B
 	private static final Logger logger = LogManager.getLogger(BookingConverter.class);
 
 	@Autowired
-	protected ConvenienceConverter convenienceConverter;
-
-	@Autowired
 	protected BookingInfoConverter bookingInfoConverter;
 
 	@Autowired

@@ -12,8 +12,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -83,11 +81,6 @@ public class BookingEntity extends CommonEntity {
 	@Column(name = "grand_total")
 	@JsonProperty("grandTotal")
 	private String grandTotal;
-	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
-	@JoinColumn(name = "convenience_id", nullable = false)
-	@JsonProperty("conveniences")
-	private ConvenienceEntity convenienceEntity;
 	
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "bookingEntity", cascade = { CascadeType.ALL })
 	@JsonProperty("bookingInfos")

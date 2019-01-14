@@ -12,11 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.orastays.booking.bookingserver.exceptions.FormExceptions;
@@ -24,13 +22,9 @@ import com.orastays.booking.bookingserver.helper.AuthConstant;
 import com.orastays.booking.bookingserver.helper.MessageUtil;
 import com.orastays.booking.bookingserver.helper.Util;
 import com.orastays.booking.bookingserver.model.BookingModel;
-import com.orastays.booking.bookingserver.model.ConvenienceModel;
-import com.orastays.booking.bookingserver.model.GstSlabModel;
 import com.orastays.booking.bookingserver.model.PaymentModel;
 import com.orastays.booking.bookingserver.model.ResponseModel;
 import com.orastays.booking.bookingserver.service.BookingService;
-import com.orastays.booking.bookingserver.service.ConvenienceService;
-import com.orastays.booking.bookingserver.service.GstSlabService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -57,12 +51,6 @@ public class BookingController extends BaseController {
 	@Autowired
 	protected BookingService bookingService;
 	
-	@Autowired
-	protected ConvenienceService convenienceService;
-	
-	@Autowired
-	protected GstSlabService gstSlabService;
-
 	@PostMapping(value = "/add-booking", produces = "application/json")
 	@ApiOperation(value = "Add Booking", response = ResponseModel.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
@@ -305,98 +293,4 @@ public class BookingController extends BaseController {
 		}
 	}
 	
-	@GetMapping(value = "/get-convenience", produces = "application/json")
-	@ApiOperation(value = "Get Convenience", response = ResponseModel.class)
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
-			@ApiResponse(code = 201, message = "Please Try after Sometime!!!") })
-
-	public ResponseEntity<ResponseModel> getConvenience() {
-		if (logger.isInfoEnabled()) {
-			logger.info("getConvenience -- START");
-		}
-
-		ResponseModel responseModel = new ResponseModel();
-		Util.printLog(null, AuthConstant.INCOMING, "get-convenience", request);
-		try {
-			ConvenienceModel convenienceModel = convenienceService.getActiveConvenienceModel();
-			responseModel.setResponseBody(convenienceModel);
-			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE));
-			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_MESSAGE));
-		} catch (FormExceptions fe) {
-			for (Entry<String, Exception> entry : fe.getExceptions().entrySet()) {
-				responseModel.setResponseCode(entry.getKey());
-				responseModel.setResponseMessage(entry.getValue().getMessage());
-				if (logger.isInfoEnabled()) {
-					logger.info("FormExceptions in getConvenience -- " + Util.errorToString(fe));
-				}
-				break;
-			}
-		} catch (Exception e) {
-			if (logger.isInfoEnabled()) {
-				logger.info("Exception in getConvenience -- " + Util.errorToString(e));
-			}
-			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_ERROR_CODE));
-			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_ERROR_MESSAGE));
-		}
-
-		Util.printLog(responseModel, AuthConstant.OUTGOING, "get-convenience", request);
-
-		if (logger.isInfoEnabled()) {
-			logger.info("getConvenience -- END");
-		}
-
-		if (responseModel.getResponseCode().equals(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE))) {
-			return new ResponseEntity<>(responseModel, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	
-	@GetMapping(value = "/get-gst-price", produces = "application/json")
-	@ApiOperation(value = "GST GST Price", response = ResponseModel.class)
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
-			@ApiResponse(code = 201, message = "Please Try after Sometime!!!") })
-
-	public ResponseEntity<ResponseModel> getGstPrice(@RequestParam("amount") String amount) {
-		if (logger.isInfoEnabled()) {
-			logger.info("getGstPrice -- START");
-		}
-
-		ResponseModel responseModel = new ResponseModel();
-		Util.printLog(null, AuthConstant.INCOMING, "get-gst-price", request);
-		try {
-			GstSlabModel gstSlabModel = gstSlabService.getActiveGstModel(Double.parseDouble(amount));
-			responseModel.setResponseBody(gstSlabModel);
-			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE));
-			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_MESSAGE));
-		} catch (FormExceptions fe) {
-			for (Entry<String, Exception> entry : fe.getExceptions().entrySet()) {
-				responseModel.setResponseCode(entry.getKey());
-				responseModel.setResponseMessage(entry.getValue().getMessage());
-				if (logger.isInfoEnabled()) {
-					logger.info("FormExceptions in getGstPrice -- " + Util.errorToString(fe));
-				}
-				break;
-			}
-		} catch (Exception e) {
-			if (logger.isInfoEnabled()) {
-				logger.info("Exception in getGstPrice -- " + Util.errorToString(e));
-			}
-			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_ERROR_CODE));
-			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_ERROR_MESSAGE));
-		}
-
-		Util.printLog(responseModel, AuthConstant.OUTGOING, "get-gst-price", request);
-
-		if (logger.isInfoEnabled()) {
-			logger.info("getGstPrice -- END");
-		}
-
-		if (responseModel.getResponseCode().equals(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE))) {
-			return new ResponseEntity<>(responseModel, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
-		}
-	}
 }
