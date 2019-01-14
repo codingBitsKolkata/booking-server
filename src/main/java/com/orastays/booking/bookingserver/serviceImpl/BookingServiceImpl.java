@@ -23,9 +23,12 @@ import com.orastays.booking.bookingserver.dao.BookingVsRoomDAO;
 import com.orastays.booking.bookingserver.entity.BookingEntity;
 import com.orastays.booking.bookingserver.entity.BookingInfoEntity;
 import com.orastays.booking.bookingserver.entity.BookingVsRoomEntity;
+import com.orastays.booking.bookingserver.entity.ConvenienceEntity;
+import com.orastays.booking.bookingserver.entity.GstSlabEntity;
 import com.orastays.booking.bookingserver.exceptions.FormExceptions;
 import com.orastays.booking.bookingserver.helper.AuthConstant;
 import com.orastays.booking.bookingserver.helper.BookingStatus;
+import com.orastays.booking.bookingserver.helper.PropertyLocation;
 import com.orastays.booking.bookingserver.helper.RoomStatus;
 import com.orastays.booking.bookingserver.helper.Status;
 import com.orastays.booking.bookingserver.helper.SynchronizedRoomBooking;
@@ -34,6 +37,8 @@ import com.orastays.booking.bookingserver.model.BookingModel;
 import com.orastays.booking.bookingserver.model.BookingVsRoomModel;
 import com.orastays.booking.bookingserver.model.PaymentModel;
 import com.orastays.booking.bookingserver.service.BookingService;
+import com.orastays.booking.bookingserver.service.ConvenienceService;
+import com.orastays.booking.bookingserver.service.GstSlabService;
 import com.orastays.booking.bookingserver.service.SacService;
 import com.orastays.booking.bookingserver.validations.BookingValidation;
 
@@ -54,6 +59,12 @@ public class BookingServiceImpl implements BookingService {
 
 	@Autowired
 	protected BookingValidation bookingValidation;
+
+	@Autowired
+	protected ConvenienceService convenienceService;
+
+	@Autowired
+	protected GstSlabService gstSlabService;
 
 	@Autowired
 	protected SacService sacService;
@@ -157,6 +168,16 @@ public class BookingServiceImpl implements BookingService {
 			bookingEntity.setCreatedDate(Util.getCurrentDateTime());
 			bookingEntity.setStatus(BookingStatus.INACTIVE.ordinal());
 	
+			ConvenienceEntity convenienceEntity = convenienceService.getActiveConvenienceEntity();
+			bookingEntity.setConvenienceEntity(convenienceEntity);
+			Double convenienceAmountWithGst = Double.parseDouble(convenienceEntity.getAmount());
+			convenienceAmountWithGst = Util.calculateGstPayableAmount(convenienceAmountWithGst,
+					Double.parseDouble(convenienceEntity.getGstPercentage()));
+	
+			bookingEntity.setConvenienceAmtWgst(Util.roundTo2Places((convenienceAmountWithGst)));
+	
+			Double totalPayableWithoutGst = 0.0;
+			Double totalPayableWithGst = 0.0;
 			
 			Long bookingId = (Long) bookingDAO.save(bookingEntity);
 			BookingEntity bookingEntity2 = bookingDAO.find(bookingId);
@@ -169,7 +190,31 @@ public class BookingServiceImpl implements BookingService {
 				bookingVsRoomEntity.setStatus(RoomStatus.INACTIVE.ordinal());
 				bookingVsRoomEntity.setCreatedBy(Long.parseLong(bookingModel.getUserId()));
 				bookingVsRoomEntity.setCreatedDate(Util.getCurrentDateTime());
+				
+				Double roomActualPrice = Double.parseDouble(bookingVsRoomModel.getRoomActualPrice());
 	
+				GstSlabEntity gstSlabEntity = gstSlabService.getActiveGstEntity(roomActualPrice);
+	
+				Double gstPercentage = Double.parseDouble(gstSlabEntity.getPercentage());
+	
+				Double roomGstSlabPrice = Util.calculateGstPayableAmount(roomActualPrice, gstPercentage);
+	
+				totalPayableWithoutGst = roomActualPrice * Integer.parseInt(bookingModel.getNumOfDays());
+				totalPayableWithGst = roomGstSlabPrice * Integer.parseInt(bookingModel.getNumOfDays());
+	
+				bookingVsRoomEntity.setRoomGSTSlabPrice(Util.roundTo2Places(roomGstSlabPrice));
+	
+				Double priceDiffGstVsActual = roomGstSlabPrice - roomActualPrice;
+				if (bookingModel.getPropertyLoc().equals(String.valueOf(PropertyLocation.WEST_BENGAL.ordinal()))) {
+					String cgstSgst = Util.roundTo2Places(priceDiffGstVsActual / 2);
+					bookingVsRoomEntity.setCgst(cgstSgst);
+					bookingVsRoomEntity.setSgst(cgstSgst);
+				} else {
+					bookingVsRoomEntity.setIgst(Util.roundTo2Places(priceDiffGstVsActual));
+				}
+	
+				bookingVsRoomEntity.setGstSlabEntity(gstSlabEntity);
+				bookingVsRoomEntity.setSacCodeEntity(sacService.getActiveSacCodeEntity());
 				
 				bookingVsRoomEntity.setBookingEntity(bookingEntity2);
 				
@@ -190,7 +235,13 @@ public class BookingServiceImpl implements BookingService {
 			bookingInfoDAO.save(bookingInfoEntity);
 			
 			
+			//update booking entity
+			//bookingEntity2.setTotalPaybleWithoutGST(Util.roundTo2Places(totalPayableWithoutGst));
+			//bookingEntity2.setTotalPaybleWithGST(Util.roundTo2Places(totalPayableWithGst));
+			bookingEntity2.setGrandTotal(Util.roundTo2Places(totalPayableWithGst + convenienceAmountWithGst));
 	
+			bookingDAO.update(bookingEntity2);
+			
 			//set booking vs payment
 			bookingEntity2.setBookingVsRoomEntities(bookingVsRoomEntities);
 			if(bookingModel.getFormOfPayment().getMode().equalsIgnoreCase(AuthConstant.MODE_CASH) || bookingModel.getFormOfPayment().getMode().equalsIgnoreCase(AuthConstant.MODE_PARTIAL)) {

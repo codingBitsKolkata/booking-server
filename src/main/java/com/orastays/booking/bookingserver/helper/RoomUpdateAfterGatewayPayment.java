@@ -151,7 +151,7 @@ public class RoomUpdateAfterGatewayPayment {
 				cancellationEntity.setReasonForCancellation(AuthConstant.REFUND_CONCURRENT_BOOKING_NOTE);
 				cancellationEntity.setTotalAmountPaid(bookingVsPaymentEntity.getOrderAmount());
 				cancellationEntity.setTotalAmountRefunded(bookingVsPaymentEntity.getAmountPaid());
-				cancellationEntity.setTotalPaybleWithoutGst(bookingEntity.getTotalPaybleWithoutGST());
+				//cancellationEntity.setTotalPaybleWithoutGst(bookingEntity.getTotalPaybleWithoutGST());
 				cancellationEntity.setBookingEntity(bookingEntity);
 				cancellationEntity.setUserId(String.valueOf(bookingVsPaymentEntity.getCreatedBy()));
 				

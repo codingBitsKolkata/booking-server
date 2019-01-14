@@ -1,5 +1,6 @@
 package com.orastays.booking.bookingserver.controller;
 
+import java.util.List;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -91,6 +92,101 @@ public class CancellationController extends BaseController {
 
 		if (logger.isInfoEnabled()) {
 			logger.info("cancelBooking -- END");
+		}
+
+		if (responseModel.getResponseCode().equals(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE))) {
+			return new ResponseEntity<>(responseModel, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping(value = "/get-property-cancellations", produces = "application/json")
+	@ApiOperation(value = "Property Cancellations", response = ResponseModel.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 201, message = "Please Try after Sometime!!!") })
+
+	public ResponseEntity<ResponseModel> getPropertyCancellations(@RequestBody BookingModel bookingModel) {
+		if (logger.isInfoEnabled()) {
+			logger.info("getPropertyCancellations -- START");
+		}
+
+		ResponseModel responseModel = new ResponseModel();
+		Util.printLog(bookingModel, AuthConstant.INCOMING, "get-property-cancellations", request);
+		try {
+			List<BookingModel> bookingModels = cancellationService.getPropertyCancellations(bookingModel);
+			responseModel.setResponseBody(bookingModels);
+			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE));
+			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_MESSAGE));
+		} catch (FormExceptions fe) {
+			for (Entry<String, Exception> entry : fe.getExceptions().entrySet()) {
+				responseModel.setResponseCode(entry.getKey());
+				responseModel.setResponseMessage(entry.getValue().getMessage());
+				if (logger.isInfoEnabled()) {
+					logger.info("FormExceptions in getPropertyCancellations -- " + Util.errorToString(fe));
+				}
+				break;
+			}
+		} catch (Exception e) {
+			if (logger.isInfoEnabled()) {
+				logger.info("Exception in getPropertyCancellations -- " + Util.errorToString(e));
+			}
+			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_ERROR_CODE));
+			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_ERROR_MESSAGE));
+		}
+
+		Util.printLog(responseModel, AuthConstant.OUTGOING, "get-property-cancellations", request);
+
+		if (logger.isInfoEnabled()) {
+			logger.info("getPropertyBookings -- END");
+		}
+
+		if (responseModel.getResponseCode().equals(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE))) {
+			return new ResponseEntity<>(responseModel, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
+	@PostMapping(value = "/get-user-cancellations", produces = "application/json")
+	@ApiOperation(value = "User Cancellations", response = ResponseModel.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 201, message = "Please Try after Sometime!!!") })
+
+	public ResponseEntity<ResponseModel> getUserCancellations(@RequestBody BookingModel bookingModel) {
+		if (logger.isInfoEnabled()) {
+			logger.info("getUserCancellations -- START");
+		}
+
+		ResponseModel responseModel = new ResponseModel();
+		Util.printLog(bookingModel, AuthConstant.INCOMING, "get-user-cancellations", request);
+		try {
+			List<BookingModel> bookingModels = cancellationService.getUserCancellations(bookingModel);
+			responseModel.setResponseBody(bookingModels);
+			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE));
+			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_MESSAGE));
+		} catch (FormExceptions fe) {
+			for (Entry<String, Exception> entry : fe.getExceptions().entrySet()) {
+				responseModel.setResponseCode(entry.getKey());
+				responseModel.setResponseMessage(entry.getValue().getMessage());
+				if (logger.isInfoEnabled()) {
+					logger.info("FormExceptions in getUserCancellations -- " + Util.errorToString(fe));
+				}
+				break;
+			}
+		} catch (Exception e) {
+			if (logger.isInfoEnabled()) {
+				logger.info("Exception in getUserCancellations -- " + Util.errorToString(e));
+			}
+			responseModel.setResponseCode(messageUtil.getBundle(AuthConstant.COMMON_ERROR_CODE));
+			responseModel.setResponseMessage(messageUtil.getBundle(AuthConstant.COMMON_ERROR_MESSAGE));
+		}
+
+		Util.printLog(responseModel, AuthConstant.OUTGOING, "get-user-cancellations", request);
+
+		if (logger.isInfoEnabled()) {
+			logger.info("getUserCancellations -- END");
 		}
 
 		if (responseModel.getResponseCode().equals(messageUtil.getBundle(AuthConstant.COMMON_SUCCESS_CODE))) {

@@ -71,7 +71,7 @@ public class SynchronizedRoomBooking {
 			Double percentage = Double.parseDouble(bm.getFormOfPayment().getPercentage());
 			// calculate cashless amount
 
-			Double grandTotal = Double.parseDouble(be.getTotalAmount());
+			Double grandTotal = Double.parseDouble(be.getGrandTotal());
 			Double cashlessAmount = percentage * 0.01 * grandTotal;
 			Double cashAmount = grandTotal - cashlessAmount;
 			// set two rows in table for cash and cashfree
@@ -138,7 +138,7 @@ public class SynchronizedRoomBooking {
 		bookingVsPaymentEntity.setPercentage(Util.roundTo2Places(100.00)); // remove hardcode
 		GatewayEntity gatewayEntity = gatewayService.getGatewayEntity(AuthConstant.MODE_CASHLESS);
 		bookingVsPaymentEntity.setGatewayEntity(gatewayEntity);
-		bookingVsPaymentEntity.setOrderAmount(be.getTotalAmount());
+		bookingVsPaymentEntity.setOrderAmount(be.getGrandTotal());
 		bookingVsPaymentEntity.setAmountPaid(String.valueOf(Status.ZERO.ordinal()));
 		bookingVsPaymentEntity.setStatus(PaymentStatus.ACTIVE.ordinal());
 

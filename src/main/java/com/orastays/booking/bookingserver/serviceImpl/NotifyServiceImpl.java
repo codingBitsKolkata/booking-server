@@ -120,7 +120,7 @@ public class NotifyServiceImpl implements NotifyService {
 			cancellationEntity.setReasonForCancellation(AuthConstant.USER_CANCELLED_BOOKING_IN_GATEWAY);
 			cancellationEntity.setTotalAmountPaid(bookingVsPaymentEntity.getOrderAmount());
 			cancellationEntity.setTotalAmountRefunded(bookingVsPaymentEntity.getAmountPaid());
-			cancellationEntity.setTotalPaybleWithoutGst(bookingEntity.getTotalPaybleWithoutGST());
+			//cancellationEntity.setTotalPaybleWithoutGst(bookingEntity.getTotalPaybleWithoutGST());
 			cancellationEntity.setBookingEntity(bookingEntity);
 			cancellationEntity.setUserId(String.valueOf(bookingVsPaymentEntity.getCreatedBy()));
 			

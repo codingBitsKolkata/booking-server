@@ -1,12 +1,16 @@
 package com.orastays.booking.bookingserver.converter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import com.orastays.booking.bookingserver.entity.CancellationEntity;
+import com.orastays.booking.bookingserver.helper.Util;
 import com.orastays.booking.bookingserver.model.CancellationModel;
 
 @Component
@@ -16,6 +20,9 @@ public class CancellationConverter extends CommonConverter implements BaseConver
 
 	private static final Logger logger = LogManager.getLogger(CancellationConverter.class);
 
+	@Autowired
+	protected CancellationVsRoomConverter cancellationVsRoomConverter;
+	
 	@Override
 	public CancellationEntity modelToEntity(CancellationModel m) {
 		// TODO Auto-generated method stub
@@ -25,13 +32,36 @@ public class CancellationConverter extends CommonConverter implements BaseConver
 	@Override
 	public CancellationModel entityToModel(CancellationEntity e) {
 		// TODO Auto-generated method stub
-		return null;
+		if (logger.isInfoEnabled()) {
+			logger.info("entityToModel -- START");
+		}
+		CancellationModel cancellationModel = new CancellationModel();
+		cancellationModel = (CancellationModel) Util.transform(modelMapper, e, cancellationModel);
+		if(e.getCancellationVsRoomsEntities() != null)
+			cancellationModel.setCancellationVsRoomsModels(cancellationVsRoomConverter.entityListToModelList(e.getCancellationVsRoomsEntities()));
+		if (logger.isInfoEnabled()) {
+			logger.info("entityToModel -- END");
+		}
+		return cancellationModel;
 	}
 
 	@Override
 	public List<CancellationModel> entityListToModelList(List<CancellationEntity> es) {
 		// TODO Auto-generated method stub
-		return null;
+		if (logger.isInfoEnabled()) {
+			logger.info("entityListToModelList -- START");
+		}
+		List<CancellationModel> cancellationModels = null;
+		if (!CollectionUtils.isEmpty(es)) {
+			cancellationModels = new ArrayList<>();
+			for (CancellationEntity cancellationEntity : es) {
+				cancellationModels.add(entityToModel(cancellationEntity));
+			}
+		}
+		if (logger.isInfoEnabled()) {
+			logger.info("entityListToModelList -- END");
+		}
+		return cancellationModels;
 	}
 
 	

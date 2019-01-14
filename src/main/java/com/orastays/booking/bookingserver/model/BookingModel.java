@@ -47,43 +47,62 @@ public class BookingModel extends CommonModel {
 
 	@JsonProperty("totalPaybleWithGST")
 	private String totalPaybleWithGST;
-	
+
+	@JsonProperty("grandTotal")
+	private String grandTotal;
+
+	@JsonProperty("conveniences")
+	private ConvenienceModel convenienceModel;
+
 	@JsonProperty("bookingInfos")
 	private BookingInfoModel bookingInfoModel;
 
 	@JsonProperty("bookingApproval")
 	private String bookingApproval;
-	
+
+	@JsonProperty("convenienceAmtWgst")
+	private String convenienceAmtWgst;
+
 	@JsonProperty("bookingVsRooms")
 	private List<BookingVsRoomModel> bookingVsRoomModels;
-	
+
 	@JsonProperty("bookingVsPayments")
 	private List<BookingVsPaymentModel> bookingVsPaymentModels;
-	
+
 	@JsonProperty("formOfPayment")
 	private FormOfPayment formOfPayment;
-	
+
+	@JsonProperty("userInfo")
+	private UserInfo userInfo;
+
 	@JsonProperty("cancellations")
 	private CancellationModel cancellationModel;
-	
-	@JsonProperty("propertyOffer")
-	private String propertyOffer;
 
-	@JsonProperty("convenienceFee")
-	private String convenienceFee;
+	@JsonProperty("oraAmount")
+	private String oraAmount;
 
-	@JsonProperty("convenienceGSTPercentage")
-	private String convenienceGSTPercentage;
+	@JsonProperty("oraDiscount")
+	private String oraDiscount;
 
-	@JsonProperty("convenienceGSTAmount")
-	private String convenienceGSTAmount;
-	
+	@JsonProperty("hostDiscount")
+	private String hostDiscount;
+
+	@JsonProperty("offerAmount")
+	private String offerAmount;
+
+	@JsonProperty("gstPercentage")
+	private String gstPercentage;
+
+	@JsonProperty("gstAmount")
+	private String gstAmount;
+
+	@JsonProperty("priceDropAmount")
+	private String priceDropAmount;
+
+	@JsonProperty("priceDropPercentage")
+	private String priceDropPercentage;
+
 	@JsonProperty("totalAmount")
 	private String totalAmount;
 
-	@JsonProperty("amountPayable")
-	private String amountPayable;
 }
-
-
-
