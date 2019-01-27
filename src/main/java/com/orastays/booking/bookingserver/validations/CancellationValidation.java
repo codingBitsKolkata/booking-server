@@ -39,7 +39,7 @@ public class CancellationValidation {
 
 	public void validateCancelBooking(BookingModel bookingModel) throws FormExceptions {
 		if (logger.isInfoEnabled()) {
-			logger.debug("validateCancelBooking -- START");
+			logger.info("validateCancelBooking -- START");
 		}
 
 		// First check whether the booking is already cancelled
@@ -76,7 +76,7 @@ public class CancellationValidation {
 			throw new FormExceptions(exceptions);
 		}
 		if (logger.isInfoEnabled()) {
-			logger.debug("validateCancelBooking -- END");
+			logger.info("validateCancelBooking -- END");
 		}
 	}
 

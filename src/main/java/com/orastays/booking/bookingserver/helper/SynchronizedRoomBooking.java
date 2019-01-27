@@ -46,8 +46,8 @@ public class SynchronizedRoomBooking {
 	protected MessageUtil messageUtil;
 
 	public synchronized PaymentModel bookRoomForCashPayments(BookingModel bm, BookingEntity be) throws FormExceptions {
-		if (logger.isDebugEnabled()) {
-			logger.debug("bookRoomForCashPayments -- Start");
+		if (logger.isInfoEnabled()) {
+			logger.info("bookRoomForCashPayments -- Start");
 		}
 
 		bookingValidation.validateBookingBeforePayment(bm);
@@ -100,8 +100,8 @@ public class SynchronizedRoomBooking {
 			setBookingVsPaymentCash("100", be, bm, be.getGrandTotal());
 		}
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("bookRoomForCashPayments -- End");
+		if (logger.isInfoEnabled()) {
+			logger.info("bookRoomForCashPayments -- End");
 		}
 		return null;
 	}
@@ -127,8 +127,8 @@ public class SynchronizedRoomBooking {
 
 	public PaymentModel bookRoomForCashLessPayments(BookingModel bm, BookingEntity be) throws FormExceptions {
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("bookRoomForCashLessPayments -- Start");
+		if (logger.isInfoEnabled()) {
+			logger.info("bookRoomForCashLessPayments -- Start");
 		}
 		BookingVsPaymentEntity bookingVsPaymentEntity = new BookingVsPaymentEntity();
 		bookingVsPaymentEntity.setBookingEntity(be);
@@ -143,8 +143,8 @@ public class SynchronizedRoomBooking {
 		bookingVsPaymentEntity.setStatus(PaymentStatus.ACTIVE.ordinal());
 
 		PaymentModel paymentModel = cashFreeApi.getPaymentLink(bm, be, bookingVsPaymentEntity);
-		if (logger.isDebugEnabled()) {
-			logger.debug("bookRoomForCashLessPayments -- End");
+		if (logger.isInfoEnabled()) {
+			logger.info("bookRoomForCashLessPayments -- End");
 		}
 		return paymentModel;
 	}

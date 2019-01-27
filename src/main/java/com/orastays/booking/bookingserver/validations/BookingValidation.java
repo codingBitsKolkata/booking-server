@@ -32,8 +32,8 @@ public class BookingValidation {
 	protected BookingDAO bookingDAO;
 
 	public void validateBookingBeforePayment(BookingModel bookingModel) throws FormExceptions {
-		if (logger.isDebugEnabled()) {
-			logger.debug("validateBookingBeforePayment -- Start");
+		if (logger.isInfoEnabled()) {
+			logger.info("validateBookingBeforePayment -- Start");
 		}
 
 		Map<String, Exception> exceptions = new LinkedHashMap<>();
@@ -74,8 +74,8 @@ public class BookingValidation {
 
 		// Set BookingModel
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("validateBookingBeforePayment -- End");
+		if (logger.isInfoEnabled()) {
+			logger.info("validateBookingBeforePayment -- End");
 		}
 	}
 }

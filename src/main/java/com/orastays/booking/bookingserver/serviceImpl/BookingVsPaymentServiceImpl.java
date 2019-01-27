@@ -30,8 +30,8 @@ public class BookingVsPaymentServiceImpl implements BookingVsPaymentService{
 	
 	@Override
 	public BookingVsPaymentEntity getBookingVsPaymentEntityByOrderId(String orderId) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("getBookingVsPaymentEntityByOrderId -- Start");
+		if (logger.isInfoEnabled()) {
+			logger.info("getBookingVsPaymentEntityByOrderId -- Start");
 		}
 		
 		BookingVsPaymentEntity bookingVsPaymentEntity = null;
@@ -50,8 +50,8 @@ public class BookingVsPaymentServiceImpl implements BookingVsPaymentService{
 				logger.info("Exception in getBookingVsPaymentEntityByOrderId -- " + Util.errorToString(e));
 			}
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("getBookingVsPaymentEntityByOrderId -- END");
+		if (logger.isInfoEnabled()) {
+			logger.info("getBookingVsPaymentEntityByOrderId -- END");
 		}
 		
 		return bookingVsPaymentEntity;
