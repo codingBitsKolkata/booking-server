@@ -22,8 +22,8 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
-group = 'com.orastays.booking'
-version = '0.0.1-SNAPSHOT'
+group = 'com.orastays'
+//version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
@@ -33,11 +33,11 @@ repositories {
 //create a single Jar with all dependencies
 task fatJar(type: Jar) {
 	manifest {
-        attributes 'Implementation-Title': 'BookingServer',  
-        	'Implementation-Version': version,
+        attributes 'Implementation-Title': 'Booking Server',  
+        	//'Implementation-Version': version,
         	'Main-Class': 'com.orastays.bookingserver.BookingServerApplication'
     }
-    baseName = project.name + '-all'
+    baseName = project.name
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
