@@ -15,8 +15,9 @@ plugins {
 }
 
 ext {
-		springCloudVersion = 'Edgware.SR5'
-	}
+	springCloudVersion = 'Edgware.SR5'
+}
+
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
