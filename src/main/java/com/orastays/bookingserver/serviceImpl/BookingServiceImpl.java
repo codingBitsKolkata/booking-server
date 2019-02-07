@@ -73,7 +73,7 @@ public class BookingServiceImpl extends BaseServiceImpl implements BookingServic
 		logger.info("getPropertyBookings -- START");
 
 		List<BookingModel> bookingModels = null;
-		try {
+/*		try {
 			Map<String, String> innerMap1 = new LinkedHashMap<>();
 			innerMap1.put("status", String.valueOf(BookingStatus.BOOKED.ordinal()));
 			innerMap1.put("propertyId", bookingModel.getPropertyId());
@@ -86,7 +86,14 @@ public class BookingServiceImpl extends BaseServiceImpl implements BookingServic
 			bookingModels = bookingConverter.entityListToModelList(bookingDAO.fetchListBySubCiteria(alliasMap));
 		} catch (Exception e) {
 			logger.info("Exception in getPropertyBookings -- " + Util.errorToString(e));
+		}*/
+		try {
+			bookingModels = bookingConverter.entityListToModelList(bookingDAO.getPropertyBookingsByDate(bookingModel.getCheckinDate(), bookingModel.getCheckoutDate(), bookingModel.getPropertyId()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
 		logger.info("getPropertyBookings -- END");
 
 		return bookingModels;
@@ -97,7 +104,7 @@ public class BookingServiceImpl extends BaseServiceImpl implements BookingServic
 		logger.info("getUserBookings -- START");
 
 		List<BookingModel> bookingModels = null;
-		try {
+		/*try {
 			Map<String, String> innerMap1 = new LinkedHashMap<>();
 			innerMap1.put("status", String.valueOf(BookingStatus.BOOKED.ordinal()));
 			innerMap1.put("userId", bookingModel.getUserId());
@@ -110,8 +117,13 @@ public class BookingServiceImpl extends BaseServiceImpl implements BookingServic
 			bookingModels = bookingConverter.entityListToModelList(bookingDAO.fetchListBySubCiteria(alliasMap));
 		} catch (Exception e) {
 			logger.info("Exception in getUserBookings -- " + Util.errorToString(e));
+		}*/
+		try {
+			bookingModels = bookingConverter.entityListToModelList(bookingDAO.getUserBookingsByDate(bookingModel.getCheckinDate(), bookingModel.getCheckoutDate(), bookingModel.getUserId()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
 		logger.info("getUserBookings -- END");
 
 		return bookingModels;

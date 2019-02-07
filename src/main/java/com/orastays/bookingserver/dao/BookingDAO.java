@@ -31,20 +31,66 @@ public class BookingDAO extends GenericDAO<BookingEntity, Long> {
 		List results = query.list();
 		return results;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BookingEntity> getPropertyBookingsByDate(String checkinDate,String checkoutDate, String propertyId) {
+		String hql = "FROM BookingEntity be where be.propertyId = " + Long.parseLong(propertyId) + " and " +
+			"("
+			+ "(" + "Date(be.checkinDate) >= Date('" + checkinDate + "') and DATE(be.checkoutDate) <= Date('"+ checkoutDate + "')" + ")" + 
+			"or" +
+			"(" + "DATE(be.checkinDate) >= Date('" + checkinDate + "') and DATE(be.checkoutDate) >= Date('" + checkoutDate + "')"
+			+ "and (DATE(be.checkinDate) <= Date('" + checkoutDate + "'))" + ")" + 
+			"or" + 
+			"(" + "DATE(be.checkinDate) <= Date('" + checkinDate + "') and DATE(be.checkoutDate) >= Date('"
+			+ checkoutDate + "')" + ")" +
+			"or" + 
+			"(" + "DATE(be.checkinDate) <= Date('" + checkinDate+ "') and DATE(be.checkoutDate) <= Date('" + checkoutDate + "')"
+			+ "and (DATE (be.checkoutDate) >= Date('" + checkinDate + "'))" + ")" + 
+			")";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		@SuppressWarnings("rawtypes")
+		List results = query.list();
+		return results;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BookingEntity> getUserBookingsByDate(String checkinDate,String checkoutDate, String userId) {
+		String hql = "FROM BookingEntity be where be.userId = " + Long.parseLong(userId) + " and " +
+			"("
+			+ "(" + "Date(be.checkinDate) >= Date('" + checkinDate + "') and DATE(be.checkoutDate) <= Date('"+ checkoutDate + "')" + ")" + 
+			"or" +
+			"(" + "DATE(be.checkinDate) >= Date('" + checkinDate + "') and DATE(be.checkoutDate) >= Date('" + checkoutDate + "')"
+			+ "and (DATE(be.checkinDate) <= Date('" + checkoutDate + "'))" + ")" + 
+			"or" + 
+			"(" + "DATE(be.checkinDate) <= Date('" + checkinDate + "') and DATE(be.checkoutDate) >= Date('"
+			+ checkoutDate + "')" + ")" +
+			"or" + 
+			"(" + "DATE(be.checkinDate) <= Date('" + checkinDate+ "') and DATE(be.checkoutDate) <= Date('" + checkoutDate + "')"
+			+ "and (DATE (be.checkoutDate) >= Date('" + checkinDate + "'))" + ")" + 
+			")";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		@SuppressWarnings("rawtypes")
+		List results = query.list();
+		return results;
+	}
 
 	public boolean getBookedPivateRoom(String propertyId, String roomId, String checkinDate, String checkoutDate) {
 
 		String hql = "SELECT count(*) as row_count FROM master_booking mb inner join booking_vs_room br on "
 				+ "mb.booking_id = br.booking_id" + " where mb.property_id = " + Long.parseLong(propertyId)
-				+ " and br.room_id = '" + roomId + "' and br.status = " + BookingStatus.BOOKED.ordinal() + " and " + "("
-				+ "(" + "Date(mb.checkin_date) >= Date('" + checkinDate + "') and DATE(mb.checkout_date) <= Date('"
-				+ checkoutDate + "')" + ")" + "or" + "(" + "DATE(mb.checkin_date) >= Date('" + checkinDate
-				+ "') and DATE(mb.checkout_date) >= Date('" + checkoutDate + "')"
-				+ "and (DATE(mb.checkin_date) <= Date('" + checkoutDate + "'))" + ")" + "or" + "("
-				+ "DATE(mb.checkin_date) <= Date('" + checkinDate + "') and DATE(mb.checkout_date) >= Date('"
-				+ checkoutDate + "')" + ")" + "or" + "(" + "DATE(mb.checkin_date) <= Date('" + checkinDate
-				+ "') and DATE(mb.checkout_date) <= Date('" + checkoutDate + "')"
-				+ "and (DATE (mb.checkout_date) >= Date('" + checkinDate + "'))" + ")" + ")";
+				+ " and br.room_id = '" + roomId + "' and br.status = " + BookingStatus.BOOKED.ordinal() + " and " + 
+				"("
+					+ "(" + "Date(mb.checkin_date) >= Date('" + checkinDate + "') and DATE(mb.checkout_date) <= Date('"+ checkoutDate + "')" + ")" + 
+				"or" +
+					"(" + "DATE(mb.checkin_date) >= Date('" + checkinDate + "') and DATE(mb.checkout_date) >= Date('" + checkoutDate + "')"
+					+ "and (DATE(mb.checkin_date) <= Date('" + checkoutDate + "'))" + ")" + 
+				"or" + 
+					"(" + "DATE(mb.checkin_date) <= Date('" + checkinDate + "') and DATE(mb.checkout_date) >= Date('"
+					+ checkoutDate + "')" + ")" +
+				"or" + 
+					"(" + "DATE(mb.checkin_date) <= Date('" + checkinDate+ "') and DATE(mb.checkout_date) <= Date('" + checkoutDate + "')"
+					+ "and (DATE (mb.checkout_date) >= Date('" + checkinDate + "'))" + ")" + 
+				")";
 
 		Query query = sessionFactory.getCurrentSession().createSQLQuery(hql);
 		try {
