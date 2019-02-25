@@ -1,4 +1,4 @@
-package com.stays.bookingserver;
+package com.orastays.bookingserver;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
