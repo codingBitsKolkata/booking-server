@@ -1,4 +1,4 @@
-package com.orastays.bookingserver.controller;
+/*package com.orastays.bookingserver.controller;
 
 import java.util.List;
 import java.util.Map.Entry;
@@ -170,4 +170,4 @@ public class CancellationController extends BookingBaseController {
 		}
 	}
 
-}
+}*/
