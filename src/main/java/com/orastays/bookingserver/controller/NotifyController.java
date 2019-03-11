@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/api")
+//@RequestMapping("/api")
 @Api(value = "Notify Booking", tags = "Notify Booking")
 public class NotifyController {
 	private static final Logger logger = LogManager.getLogger(BookingController.class);
